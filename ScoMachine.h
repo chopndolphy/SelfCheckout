@@ -1,15 +1,14 @@
 #pragma once
+#include <string>
 
 class ScoMachine
 {
     public:
         
-        void new_transaction();
         void day_reset();
         void reset_repos();
         void display_day_results();
         bool get_new_day();
-        double get_total_income();
     
     public:
         
@@ -25,6 +24,7 @@ class ScoMachine
         bool machine_running {1};
         int transaction_counter {0};
         bool new_day {1};
+        std::string new_day_answer;
 
 
 };

@@ -8,7 +8,6 @@ const double ScoMachine::change_emptied_amount {50};
 void ScoMachine::day_reset()
 {
     reset_repos();
-        //sets cash purchase balance to 0 and change repo balance to change_refill_amount
     while (machine_running)
     {
         //transaction_counter++;
@@ -23,7 +22,7 @@ void ScoMachine::day_reset()
                 //option to stop scanning
         }
         transaction.display_balances();
-            //calculates and displays item total, tax amount, and final balance
+            //calculates and displays tax amount, and final balance
         transaction.pay_final_balance();
             //choose a payment type, displays verification code if card, calculates and displays correct change if cash
         change_repo_balance -= transaction.get_change_given_amount();
@@ -38,7 +37,33 @@ void ScoMachine::day_reset()
         }
     }
     display_day_results();
-        //displays change repo balance, cash purchase balance, and total income
-        //asks if new day
 }
-//define other functions
+void ScoMachine::reset_repos()
+{
+    cash_purchase_repo_balance = 0;
+    change_repo_balance = change_refill_amount;
+}
+void ScoMachine::display_day_results()
+{
+    std::cout << "End of day results" << std::endl;
+    std::cout << "Change Repository Balance: $" << change_repo_balance << std::endl;
+    std::cout << "Cash Purchase Repository Balance: $" << cash_purchase_repo_balance << std::endl;
+    std::cout << "Total Income For Today: $" << total_income << std::endl;
+    std::cout << "\n Begin next day? (yes/no) ";
+    std::cin >> new_day_answer;
+    if (new_day_answer != "yes") 
+    {
+        new_day = 0;
+    }
+}
+bool ScoMachine::get_new_day()
+{
+    if (new_day)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}

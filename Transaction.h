@@ -1,6 +1,8 @@
 #pragma once
+#include <iostream>
 #include <string>
 #include <vector>
+#include <stdlib.h>
 
 class Transaction
 {
@@ -10,7 +12,6 @@ class Transaction
         void print_reciept();
         void pay_final_balance();
         void display_balances();
-        double calculate_running_total();
         double calculate_tax();
         double calculate_final_balance();
         double get_cash_purchase_amount();
@@ -38,4 +39,6 @@ class Transaction
         int credit_approval_code {0};
         std::vector <std::vector<std::string>> scanned_products;
         bool still_scanning {1};
+        std::string stilling_scanning_answer {""};
+        int current_barcode {0};
 };
