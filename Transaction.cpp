@@ -39,3 +39,101 @@ void Transaction::scan_item()
         still_scanning = 0;
     }
 }
+void Transaction::display_balances()
+{
+    final_tax = tax_rate * running_balance;
+    final_bill = final_tax + running_balance;
+    std::cout << "\nTax: $" << final_tax << std::endl;
+    std::cout << "Final Bill: $" << final_bill << std::endl;
+
+}
+void Transaction::pay_final_bill()
+{
+    std::cout << "\nHow would you like to pay? (cash/card) ";
+    std::cin >> cash_or_card_answer;
+    if (cash_or_card_answer == "cash")
+    {
+        std::cout << "Please insert your payment: ";
+        std::cin >> cash_payed;
+        change_owed = cash_payed - final_bill;
+        cents_remaining = change_owed * 100;
+        change_dollars = cents_remaining / 100;
+        cents_remaining %= 100;
+        change_quarters = cents_remaining / 25;
+        cents_remaining %= 25;
+        change_dimes = cents_remaining / 10;
+        cents_remaining %= 10;
+        change_nickels = cents_remaining / 5;
+        cents_remaining %= 5;
+        change_pennies = cents_remaining;
+        std::cout << "You inserted: $" << cash_payed << std::endl;
+        std::cout << "Your change: $" << change_owed << std::endl;
+        std::cout << "Dollars: " << change_dollars << std::endl;
+        std::cout << "Quarters: " << change_quarters << std::endl;
+        std::cout << "Dimes: " << change_dimes << std::endl;
+        std::cout << "Nickels: " << change_nickels << std::endl;
+        std::cout << "Pennies: " << change_pennies << std::endl;
+    }
+    else
+    {
+        srand (time(NULL));
+        credit_approval_code = rand() % 8999999 + 1000000;
+        std::cout << "Your purchase was successful! (verification code: " << credit_approval_code << ")" << std::endl;
+    }
+}
+void Transaction::print_reciept()
+{
+    std::cout << "\nWould you like a reciept? (yes/no) ";
+    std::cin >> reciept_answer;
+    if (reciept_answer == "yes")
+    {
+        std::cout << "Chris' Gross Grocery Grove" << std::endl;
+        std::cout << "\nItems purchased:" << std::endl;
+        for (int i = scanned_products.size(); i-->0;)
+        {
+            std::cout << scanned_products[i][0] << " $" << scanned_products[i][2] << std::endl;;
+        }
+        std::cout << "\nItem Balance: $" << running_balance << std::endl;
+        std::cout << "Tax Total: $" << final_tax << std::endl;
+        std::cout << "Final Bill: $" << final_bill << std::endl;
+        if (cash_or_card_answer == "card")
+        {
+            std::cout << "Card verification code: " << credit_approval_code << std::endl;
+        }
+        else
+        {
+            std::cout << "Cash inserted: $" << cash_payed << std::endl;
+            std::cout << "Change: $" << change_owed << std::endl;
+        }
+    }
+    std::cout << "\nThank you for shopping!" << std::endl;
+    std::cout << "\n Are there more customers for today? (yes/no) " << std::endl;
+    std::cin >> more_customers_answer;
+    if (more_customers_answer == "yes")
+    {
+        more_customers = 1;
+    }
+}
+double Transaction::get_change_given_amount()
+{
+    return change_owed;
+}
+double Transaction::get_final_bill()
+{
+    return final_bill;
+}
+bool Transaction::get_still_scanning()
+{
+    return still_scanning;
+}
+bool Transaction::get_more_customers()
+{
+    return more_customers;
+}
+bool Transaction::cash_purchase()
+{
+    if (cash_or_card_answer == "cash")
+    {
+        return 1;
+    }
+}

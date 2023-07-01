@@ -17,20 +17,16 @@ void ScoMachine::day_reset()
         while(transaction.get_still_scanning())
         {
             transaction.scan_item();
-                //takes barcode input and displays corresponding info with incrementing item counter
-                //updates and displays running total
-                //option to stop scanning
         }
         transaction.display_balances();
-            //calculates and displays tax amount, and final balance
-        transaction.pay_final_balance();
-            //choose a payment type, displays verification code if card, calculates and displays correct change if cash
-        change_repo_balance -= transaction.get_change_given_amount();
-        cash_purchase_repo_balance += transaction.get_cash_purchase_amount();
-        total_income += transaction.calculate_final_balance();
+        transaction.pay_final_bill();
+        if (transaction.cash_purchase())
+        {
+            change_repo_balance -= transaction.get_change_given_amount();
+            cash_purchase_repo_balance += transaction.get_final_bill();
+        }
+        total_income += transaction.get_final_bill();
         transaction.print_reciept();
-            //displays all item ids and prices, item total, tax amount, final balance
-            //displays card verification code if card or displays cash recieved and change given if cash
         if (change_repo_balance < change_emptied_amount || !transaction.get_more_customers())
         {
             machine_running = 0;

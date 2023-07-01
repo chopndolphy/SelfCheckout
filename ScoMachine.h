@@ -25,6 +25,4 @@ class ScoMachine
         int transaction_counter {0};
         bool new_day {1};
         std::string new_day_answer;
-
-
 };
