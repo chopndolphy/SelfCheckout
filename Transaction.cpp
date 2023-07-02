@@ -31,14 +31,13 @@ void Transaction::scan_item()
         return;
     }
     current_barcode = stoi(current_barcode_string);
-    scanned_products.push_back(product_list[current_barcode]);
-    int scanned_products_size = scanned_products.size();
+    scanned_products.push_back(product_list.at(current_barcode));
     system("clear");
-    for (int i = 0; i < scanned_products_size; i++)
+    for (size_t i = 0; i < scanned_products.size(); i++)
     {
-        std::cout << i+1 << " | " << scanned_products[i][0] << " | " << scanned_products[i][1] << " | $" << scanned_products[i][2] << std::endl;;
+        std::cout << i+1 << " | " << scanned_products.at(i).at(0) << " | " << scanned_products.at(i).at(1) << " | $" << scanned_products.at(i).at(2) << std::endl;;
     }
-    running_balance += stod(scanned_products[current_barcode][2]);
+    running_balance += stod(scanned_products.at(current_barcode).at(2));
     std::cout << "\n(Type 'done' to finish scanning.                 Balance: $" << running_balance << std::endl;
 }
 void Transaction::display_balances()
@@ -94,7 +93,7 @@ void Transaction::print_reciept()
         std::cout << "\nItems purchased:" << std::endl;
         for (int i = scanned_products.size(); i-->0;)
         {
-            std::cout << scanned_products[i][0] << "   $" << scanned_products[i][2] << std::endl;;
+            std::cout << scanned_products.at(i).at(0) << "   $" << scanned_products.at(i).at(2) << std::endl;;
         }
         std::cout << "\nItem Balance:   $" << running_balance << std::endl;
         std::cout << "Tax Total:      $" << final_tax << std::endl;
