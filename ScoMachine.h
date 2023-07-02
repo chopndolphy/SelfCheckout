@@ -22,7 +22,6 @@ class ScoMachine
         double change_repo_balance {change_refill_amount};
         double cash_purchase_repo_balance {0};
         bool machine_running {1};
-        int transaction_counter {0};
         bool new_day {1};
         std::string new_day_answer;
 };

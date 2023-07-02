@@ -41,11 +41,12 @@ void ScoMachine::reset_repos()
 }
 void ScoMachine::display_day_results()
 {
-    std::cout << "End of day results" << std::endl;
-    std::cout << "Change Repository Balance: $" << change_repo_balance << std::endl;
+    system("clear");
+    std::cout << "End of day results:" << std::endl;
+    std::cout << "\nChange Repository Balance:        $" << change_repo_balance << std::endl;
     std::cout << "Cash Purchase Repository Balance: $" << cash_purchase_repo_balance << std::endl;
-    std::cout << "Total Income For Today: $" << total_income << std::endl;
-    std::cout << "\n Begin next day? (yes/no) ";
+    std::cout << "Total Income For Today:           $" << total_income << std::endl;
+    std::cout << "\nBegin next day? (yes/no) ";
     std::cin >> new_day_answer;
     if (new_day_answer != "yes") 
     {
