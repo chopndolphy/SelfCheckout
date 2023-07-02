@@ -42,7 +42,9 @@ void Transaction::scan_item()
 }
 void Transaction::display_balances()
 {
-    final_tax = tax_rate * running_balance;
+    running_balance_pennies = running_balance * 100;
+    final_tax_pennies = tax_rate * running_balance_pennies;
+    final_tax = final_tax_pennies / 100.00;
     final_bill = final_tax + running_balance;
     std::cout << "                                                     Tax: $" << final_tax << std::endl;
     std::cout << "\n                                              Final Bill: $" << final_bill << std::endl;

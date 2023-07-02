@@ -31,6 +31,8 @@ class Transaction
         double change_owed {0};
         double final_tax {0};
         double final_bill {0};
+        int running_balance_pennies {0};
+        int final_tax_pennies {0};
         int scanned_products_size {0};
         int change_total_cents {0};
         int change_dollars {0};
