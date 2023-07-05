@@ -20,6 +20,32 @@ void Transaction::welcome_message()
 {
     system("clear");
     std::cout << "Welcome to Self-Checkout at Chris' Gross Grocery Grove!" << std::endl;
+    std::cout << R"(
+          .
+        ('
+        '|
+        |'
+       [::]
+       [::]   _......_
+       [::].-'      _.-`.
+       [:.'    .-. '-._.-`.
+       [/ /\   |  \        `-..
+       / / |   `-.'      .-.   `-.
+      /  `-'            (   `.    `.
+     |           /\      `-._/      \
+     '    .'\   /  `.           _.-'|
+    /    /  /   \_.-'        _.':;:/
+  .'     \_/             _.-':;_.-'
+ /   .-.             _.-' \;.-'
+/   (   \       _..-'     |
+\    `._/  _..-'    .--.  |
+ `-.....-'/  _ _  .'    '.|
+          | |_|_| |      | \  (o)
+     (o)  | |_|_| |      | | (\'/)
+    (\'/)/  ''''' |     o|  \;:;
+     :;  |        |      |  |/)
+      ;: `-.._    /__..--'\.' ;
+)" << std::endl;
     std::cout << "\nEnter barcode number to begin scanning" << std::endl;
 }
 void Transaction::scan_item()
@@ -33,9 +59,23 @@ void Transaction::scan_item()
     current_barcode = stoi(current_barcode_string);
     scanned_products.push_back(product_list.at(current_barcode));
     system("clear");
-    for (size_t i = 0; i < scanned_products.size(); i++)
+    int i = 1;
+    for (auto product : scanned_products)
     {
-        std::cout << i+1 << " | " << scanned_products.at(i).at(0) << " | " << scanned_products.at(i).at(1) << " | $" << scanned_products.at(i).at(2) << std::endl;;
+        std::cout << i << " | ";
+        for (auto info : product)
+        {
+            if (info != product.back())
+            {
+                std::cout << info << " | ";
+            }
+            else
+            {
+                std::cout << "$" << info << std::endl;
+            }
+            
+        }
+        ++i;
     }
     running_balance += stod(scanned_products.at(current_barcode).at(2));
     std::cout << "\n(Type 'done' to finish scanning.                 Balance: $" << running_balance << std::endl;
@@ -93,9 +133,9 @@ void Transaction::print_reciept()
     {
         std::cout << "Chris' Gross Grocery Grove" << std::endl;
         std::cout << "\nItems purchased:" << std::endl;
-        for (int i = scanned_products.size(); i-->0;)
+        for (auto product : scanned_products)
         {
-            std::cout << scanned_products.at(i).at(0) << "   $" << scanned_products.at(i).at(2) << std::endl;;
+            std::cout << product.at(0) << "   $" << product.at(2) << std::endl;;
         }
         std::cout << "\nItem Balance:   $" << running_balance << std::endl;
         std::cout << "Tax Total:      $" << final_tax << std::endl;
