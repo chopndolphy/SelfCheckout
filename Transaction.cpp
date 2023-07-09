@@ -1,7 +1,8 @@
 #include "Transaction.h"
 
-const double Transaction::tax_rate {.05};
-const std::vector <std::vector<std::string>> Transaction::product_list
+
+const double Transaction::taxRate {.05};
+const std::vector <std::vector<std::string>> Transaction::productList
 {
     {"Meat01       ", "T-Bone Steak                       ", "7.99"},
     {"Meat02       ", "Tyson Fresh Chicken Wings          ", "10.00"},
@@ -16,168 +17,71 @@ const std::vector <std::vector<std::string>> Transaction::product_list
     {"Eggs01       ", "Dozen Eggs                         ", "3.00"},
     {"Milk01       ", "Gallon Milk                        ", "4.00"}
 };
-void Transaction::welcome_message()
+Transaction::Transaction()
 {
-    system("clear");
-    std::cout << "Welcome to Self-Checkout at Chris' Gross Grocery Grove!" << std::endl;
-    std::cout << R"(
-          .
-        ('
-        '|
-        |'
-       [::]
-       [::]   _......_
-       [::].-'      _.-`.
-       [:.'    .-. '-._.-`.
-       [/ /\   |  \        `-..
-       / / |   `-.'      .-.   `-.
-      /  `-'            (   `.    `.
-     |           /\      `-._/      \
-     '    .'\   /  `.           _.-'|
-    /    /  /   \_.-'        _.':;:/
-  .'     \_/             _.-':;_.-'
- /   .-.             _.-' \;.-'
-/   (   \       _..-'     |
-\    `._/  _..-'    .--.  |
- `-.....-'/  _ _  .'    '.|
-          | |_|_| |      | \  (o)
-     (o)  | |_|_| |      | | (\'/)
-    (\'/)/  ''''' |     o|  \;:;
-     :;  |        |      |  |/)
-      ;: `-.._    /__..--'\.' ;
-)" << std::endl;
-    std::cout << "\nEnter barcode number to begin scanning" << std::endl;
+    stillScanning = 1;
 }
-void Transaction::scan_item()
+void Transaction::scanItem()
 {
-    std::cin >> current_barcode_string;
-    if (current_barcode_string == "done")
+    if (currentBarcodeString == "done")
     {
-        still_scanning = 0;
+        stillScanning = 0;
         return;
     }
-    current_barcode = stoi(current_barcode_string);
-    scanned_products.push_back(product_list.at(current_barcode));
-    system("clear");
-    int i = 1;
-    for (auto product : scanned_products)
-    {
-        std::cout << i << " | ";
-        for (auto info : product)
-        {
-            if (info != product.back())
-            {
-                std::cout << info << " | ";
-            }
-            else
-            {
-                std::cout << "$" << info << std::endl;
-            }
-            
-        }
-        ++i;
-    }
-    running_balance += stod(scanned_products.at(current_barcode).at(2));
-    std::cout << "\n(Type 'done' to finish scanning.                 Balance: $" << running_balance << std::endl;
+    currentBarcode = stoi(currentBarcodeString);
+    scannedProducts.push_back(productList.at(currentBarcode));
+    runningBalance += stod(scannedProducts.back().at(2));
 }
-void Transaction::display_balances()
+void Transaction::calculateBalances()
 {
-    running_balance_pennies = running_balance * 100;
-    final_tax_pennies = tax_rate * running_balance_pennies;
-    final_tax = final_tax_pennies / 100.00;
-    final_bill = final_tax + running_balance;
-    std::cout << "                                                     Tax: $" << final_tax << std::endl;
-    std::cout << "\n                                              Final Bill: $" << final_bill << std::endl;
+    runningBalancePennies = runningBalance * 100;
+    finalTaxPennies = taxRate * runningBalancePennies;
+    finalTax = finalTaxPennies / 100.00;
+    finalBill = finalTax + runningBalance;
 
 }
-void Transaction::pay_final_bill()
+void Transaction::calculateChange()
 {
-    std::cout << "\nHow would you like to pay? (cash/card) ";
-    std::cin >> cash_or_card_answer;
-    if (cash_or_card_answer == "cash")
-    {
-        std::cout << "Please insert your payment: $";
-        std::cin >> cash_payed;
-        change_owed = cash_payed - final_bill;
-        cents_remaining = change_owed * 100;
-        change_dollars = cents_remaining / 100;
-        cents_remaining %= 100;
-        change_quarters = cents_remaining / 25;
-        cents_remaining %= 25;
-        change_dimes = cents_remaining / 10;
-        cents_remaining %= 10;
-        change_nickels = cents_remaining / 5;
-        cents_remaining %= 5;
-        change_pennies = cents_remaining;
-        std::cout << "\nYou inserted: $" << cash_payed << std::endl;
-        std::cout << "Your change: $" << change_owed << std::endl;
-        std::cout << "Dollars: " << change_dollars << std::endl;
-        std::cout << "Quarters: " << change_quarters << std::endl;
-        std::cout << "Dimes: " << change_dimes << std::endl;
-        std::cout << "Nickels: " << change_nickels << std::endl;
-        std::cout << "Pennies: " << change_pennies << std::endl;
-    }
-    else
-    {
+        changeOwed = cashPayed - finalBill;
+        centsRemaining = changeOwed * 100;
+        changeDollars = centsRemaining / 100;
+        centsRemaining %= 100;
+        changeQuarters = centsRemaining / 25;
+        centsRemaining %= 25;
+        changeDimes = centsRemaining / 10;
+        centsRemaining %= 10;
+        changeNickels = centsRemaining / 5;
+        centsRemaining %= 5;
+        changePennies = centsRemaining;
+}
+void Transaction::approveCredit()
+{
         srand (time(NULL));
-        credit_approval_code = rand() % 8999999 + 1000000;
-        std::cout << "Your purchase was successful! (verification code: " << credit_approval_code << ")" << std::endl;
-    }
+        creditApprovalCode = rand() % 8999999 + 1000000;
 }
-void Transaction::print_reciept()
+void Transaction::resetTransaction()
 {
-    std::cout << "\nWould you like a reciept? (yes/no) ";
-    std::cin >> reciept_answer;
-    system("clear");
-    if (reciept_answer == "yes")
+    if (moreCustomersAnswer == "yes")
     {
-        std::cout << "Chris' Gross Grocery Grove" << std::endl;
-        std::cout << "\nItems purchased:" << std::endl;
-        for (auto product : scanned_products)
-        {
-            std::cout << product.at(0) << "   $" << product.at(2) << std::endl;;
-        }
-        std::cout << "\nItem Balance:   $" << running_balance << std::endl;
-        std::cout << "Tax Total:      $" << final_tax << std::endl;
-        std::cout << "Final Bill:     $" << final_bill << std::endl;
-        if (cash_or_card_answer == "card")
-        {
-            std::cout << "\nCard verification code: " << credit_approval_code << std::endl;
-        }
-        else
-        {
-            std::cout << "Cash inserted:  $" << cash_payed << std::endl;
-            std::cout << "Change:         $" << change_owed << std::endl;
-        }
-    }
-    std::cout << "\nThank you for shopping!" << std::endl;
-    std::cout << "\nAre there more customers for today? (yes/no) " << std::endl;
-    std::cin >> more_customers_answer;
-    if (more_customers_answer == "yes")
-    {
-        more_customers = 1;
-        still_scanning = 1;
+        moreCustomers = 1;
+        stillScanning = 1;
     }
 }
-double Transaction::get_change_given_amount()
+double Transaction::getFinalBill()
 {
-    return change_owed;
+    return finalBill;
 }
-double Transaction::get_final_bill()
+bool Transaction::getStillScanning()
 {
-    return final_bill;
+    return stillScanning;
 }
-bool Transaction::get_still_scanning()
+bool Transaction::getMoreCustomers()
 {
-    return still_scanning;
+    return moreCustomers;
 }
-bool Transaction::get_more_customers()
+bool Transaction::cashPurchase()
 {
-    return more_customers;
-}
-bool Transaction::cash_purchase()
-{
-    if (cash_or_card_answer == "cash")
+    if (cashOrCardAnswer == "cash")
     {
         return 1;
     }
@@ -186,3 +90,53 @@ bool Transaction::cash_purchase()
         return 0;
     }
 }
+std::vector <std::vector<std::string>> Transaction::getScannedProducts()
+{
+    return scannedProducts;
+}
+double Transaction::getRunningBalance()
+{
+    return runningBalance;
+}
+double Transaction::getFinalTax()
+{
+    return finalTax;
+}
+int Transaction::getChangeDollars()
+{
+    return changeDollars;
+}
+int Transaction::getChangeQuarters()
+{
+    return changeQuarters;
+}
+int Transaction::getChangeDimes()
+{
+    return changeDimes;
+}
+int Transaction::getChangeNickels()
+{
+    return changeNickels;
+}
+int Transaction::getChangePennies()
+{
+    return changePennies;
+}
+double Transaction::getCashPayed()
+{
+    return cashPayed;
+}
+double Transaction::getChangeOwed()
+{
+    return changeOwed;
+}
+int Transaction::getCreditApprovalCode()
+{
+    return creditApprovalCode;
+}
+// auto Transaction::getOutput(std::string outputType)
+// {
+//     if (outputType == "change") {return changeOwed;}
+//     else if (outputType == "bill") {return finalBill;}
+
+// }

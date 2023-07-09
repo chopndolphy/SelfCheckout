@@ -1,54 +1,60 @@
 #pragma once
-#include <iostream>
 #include <string>
 #include <vector>
-#include <stdlib.h>
 #include <algorithm>
-
 class Transaction
 {
     public:
-        void welcome_message();
-        void scan_item();
-        void print_reciept();
-        void pay_final_bill();
-        void display_balances();
-        double get_final_bill();
-        double get_cash_purchase_amount();
-        double get_change_given_amount();
-        bool get_still_scanning();
-        bool get_more_customers();
-        bool cash_purchase();
+        Transaction();
+        void scanItem();
+        void resetTransaction();
+        void calculateChange();
+        void calculateBalances();
+        double getFinalBill();
+        bool getStillScanning();
+        bool getMoreCustomers();
+        bool cashPurchase();
+        std::vector <std::vector<std::string>> getScannedProducts();
+        double getRunningBalance();
+        double getFinalTax();
+        double getFinalBill();
+        int getChangeDollars();
+        int getChangeQuarters();
+        int getChangeDimes();
+        int getChangeNickels();
+        int getChangePennies();
+        double getCashPayed();
+        double getChangeOwed();
+        int getCreditApprovalCode();
+        void approveCredit();
+        // auto getOutput(std::string outputType);
         
 
     public:
-        const static double tax_rate;
-        const static std::vector <std::vector<std::string>> product_list;
+        const static double taxRate;
+        const static std::vector <std::vector<std::string>> productList;
 
     private:
-        double running_balance {0};
-        double cash_payed {0};
-        int cents_remaining {0};
-        double change_owed {0};
-        double final_tax {0};
-        double final_bill {0};
-        int running_balance_pennies {0};
-        int final_tax_pennies {0};
-        int scanned_products_size {0};
-        int change_total_cents {0};
-        int change_dollars {0};
-        int change_quarters {0};
-        int change_dimes {0};
-        int change_nickels {0};
-        int change_pennies {0};
-        int credit_approval_code {0};
-        int current_barcode {0};
-        std::vector <std::vector<std::string>> scanned_products;
-        bool still_scanning {1};
-        bool more_customers {0};
-        std::string stilling_scanning_answer {""};
-        std::string current_barcode_string {""};
-        std::string cash_or_card_answer {""};
-        std::string reciept_answer{""};
-        std::string more_customers_answer {""};
+        double runningBalance {0};
+        double cashPayed {0};
+        int centsRemaining {0};
+        double changeOwed {0};
+        double finalTax {0};
+        double finalBill {0};
+        int runningBalancePennies {0};
+        int finalTaxPennies {0};
+        int changeTotalCents {0};
+        int changeDollars {0};
+        int changeQuarters {0};
+        int changeDimes {0};
+        int changeNickels {0};
+        int changePennies {0};
+        int creditApprovalCode {0};
+        int currentBarcode {0};
+        std::vector <std::vector<std::string>> scannedProducts;
+        bool stillScanning {1};
+        bool moreCustomers {0};
+        std::string currentBarcodeString {""};
+        std::string cashOrCardAnswer {""};
+        std::string moreCustomersAnswer {""};
 };

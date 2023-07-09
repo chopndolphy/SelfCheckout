@@ -1,11 +1,14 @@
+#include "UserInterface.h"
 #include "ScoMachine.h"
 
 int main()
 {
-    ScoMachine scomachine;
-    while(scomachine.get_new_day())
-    {
-        scomachine.day_reset();
-    }
+    Transaction t;
+    ScoMachine s(&t);
+    UserInterface anInterface(&s);
+
+    reset repos
+    while machine running 
+    displaydayresults
     return 0;
 }
