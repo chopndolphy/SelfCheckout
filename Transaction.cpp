@@ -35,7 +35,7 @@ void Transaction::scanItem(std::string barcode)
 void Transaction::calculateBalances()
 {
     runningBalancePennies = runningBalance * 100;
-    finalTaxPennies = taxRate * runningBalancePennies;
+    finalTaxPennies = round(taxRate * runningBalancePennies);
     finalTax = finalTaxPennies / 100.00;
     finalBill = finalTax + runningBalance;
 
@@ -44,13 +44,13 @@ void Transaction::calculateChange(double cashPayed)
 {
         changeOwed = cashPayed - finalBill;
         centsRemaining = changeOwed * 100;
-        changeDollars = centsRemaining / 100;
+        changeDollars = floor(centsRemaining / 100);
         centsRemaining %= 100;
-        changeQuarters = centsRemaining / 25;
+        changeQuarters = floor(centsRemaining / 25);
         centsRemaining %= 25;
-        changeDimes = centsRemaining / 10;
+        changeDimes = floor(centsRemaining / 10);
         centsRemaining %= 10;
-        changeNickels = centsRemaining / 5;
+        changeNickels = floor(centsRemaining / 5);
         centsRemaining %= 5;
         changePennies = centsRemaining;
 }
@@ -107,9 +107,3 @@ int Transaction::getCreditApprovalCode()
 {
     return creditApprovalCode;
 }
-// auto Transaction::getOutput(std::string outputType)
-// {
-//     if (outputType == "change") {return changeOwed;}
-//     else if (outputType == "bill") {return finalBill;}
-
-// }
