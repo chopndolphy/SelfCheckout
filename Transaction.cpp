@@ -21,14 +21,14 @@ Transaction::Transaction()
 {
     stillScanning = 1;
 }
-void Transaction::scanItem()
+void Transaction::scanItem(std::string barcode)
 {
-    if (currentBarcodeString == "done")
+    if (barcode == "done")
     {
         stillScanning = 0;
         return;
     }
-    currentBarcode = stoi(currentBarcodeString);
+    currentBarcode = stoi(barcode);
     scannedProducts.push_back(productList.at(currentBarcode));
     runningBalance += stod(scannedProducts.back().at(2));
 }
@@ -40,7 +40,7 @@ void Transaction::calculateBalances()
     finalBill = finalTax + runningBalance;
 
 }
-void Transaction::calculateChange()
+void Transaction::calculateChange(double cashPayed)
 {
         changeOwed = cashPayed - finalBill;
         centsRemaining = changeOwed * 100;
@@ -59,14 +59,6 @@ void Transaction::approveCredit()
         srand (time(NULL));
         creditApprovalCode = rand() % 8999999 + 1000000;
 }
-void Transaction::resetTransaction()
-{
-    if (moreCustomersAnswer == "yes")
-    {
-        moreCustomers = 1;
-        stillScanning = 1;
-    }
-}
 double Transaction::getFinalBill()
 {
     return finalBill;
@@ -74,21 +66,6 @@ double Transaction::getFinalBill()
 bool Transaction::getStillScanning()
 {
     return stillScanning;
-}
-bool Transaction::getMoreCustomers()
-{
-    return moreCustomers;
-}
-bool Transaction::cashPurchase()
-{
-    if (cashOrCardAnswer == "cash")
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
 }
 std::vector <std::vector<std::string>> Transaction::getScannedProducts()
 {
@@ -121,10 +98,6 @@ int Transaction::getChangeNickels()
 int Transaction::getChangePennies()
 {
     return changePennies;
-}
-double Transaction::getCashPayed()
-{
-    return cashPayed;
 }
 double Transaction::getChangeOwed()
 {

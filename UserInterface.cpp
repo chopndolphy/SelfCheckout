@@ -1,9 +1,8 @@
 #include "UserInterface.h"
 
-UserInterface::UserInterface(ScoMachine *s, Transaction *t)
+UserInterface::UserInterface(ScoMachine *s)
 {
     aScoMachine = s;
-    aTransaction = t;
 }
 void UserInterface::iBarcode()
 {
@@ -11,7 +10,7 @@ void UserInterface::iBarcode()
 }
 void UserInterface::iPaymentType()
 {
-    std::cin >> cashOrCardAnswer;
+    std::cin >> paymentType;
 }
 void UserInterface::iReciept()
 {
@@ -20,6 +19,14 @@ void UserInterface::iReciept()
 void UserInterface::iMoreCustomers()
 {
     std::cin >> moreCustomersAnswer;
+    if (moreCustomersAnswer == "yes")
+    {
+        moreCustomers = 1;
+    }
+    else
+    {
+        moreCustomers = 0;
+    }
 }
 void UserInterface::iCashInserted()
 {
@@ -28,6 +35,14 @@ void UserInterface::iCashInserted()
 void UserInterface::iNewDay()
 {
     std::cin >> newDayAnswer;
+    if (newDayAnswer == "no")
+    {
+        newDay = 0;
+    }
+    else
+    {
+        newDay = 1;
+    }
 }
 void UserInterface::oWelcomeMessage()
 {
@@ -65,7 +80,7 @@ void UserInterface::oScannedItems()
 {
     system("clear");
     int i = 1;
-    for (auto product : aScoMachine->getScannedProducts())
+    for (auto product : aTransaction->getScannedProducts())
     {
         std::cout << i << " | ";
         for (auto info : product)
@@ -82,12 +97,12 @@ void UserInterface::oScannedItems()
         }
         ++i;
     }
-    std::cout << "\n(Type 'done' to finish scanning.                 Balance: $" << aScoMachine->getRunningBalance() << std::endl;
+    std::cout << "\n(Type 'done' to finish scanning.                 Balance: $" << aTransaction->getRunningBalance() << std::endl;
 }
 void UserInterface::oBalances()
 {
-    std::cout << "                                                     Tax: $" << aScoMachine->getFinalTax() << std::endl;
-    std::cout << "\n                                              Final Bill: $" << aScoMachine->getFinalBill() << std::endl;
+    std::cout << "\n                                                     Tax: $" << aTransaction->getFinalTax() << std::endl;
+    std::cout << "\n                                              Final Bill: $" << aTransaction->getFinalBill() << std::endl;
 }
 void UserInterface::oPaymentTypePrompt()
 {
@@ -99,17 +114,17 @@ void UserInterface::oInsertCashPrompt()
 }
 void UserInterface::oChange()
 {
-    std::cout << "\nYou inserted: $" << aScoMachine->getCashPayed() << std::endl;
-    std::cout << "Your change: $" << aScoMachine->getChangeOwed() << std::endl;
-    std::cout << "Dollars: " << aScoMachine->getChangeDollars() << std::endl;
-    std::cout << "Quarters: " << aScoMachine->getChangeQuarters() << std::endl;
-    std::cout << "Dimes: " << aScoMachine->getChangeDimes() << std::endl;
-    std::cout << "Nickels: " << aScoMachine->getChangeNickels() << std::endl;
-    std::cout << "Pennies: " << aScoMachine->getChangePennies() << std::endl;
+    std::cout << "\nYou inserted: $" << cashInserted << std::endl;
+    std::cout << "Your change: $" << aTransaction->getChangeOwed() << std::endl;
+    std::cout << "Dollars: " << aTransaction->getChangeDollars() << std::endl;
+    std::cout << "Quarters: " << aTransaction->getChangeQuarters() << std::endl;
+    std::cout << "Dimes: " << aTransaction->getChangeDimes() << std::endl;
+    std::cout << "Nickels: " << aTransaction->getChangeNickels() << std::endl;
+    std::cout << "Pennies: " << aTransaction->getChangePennies() << std::endl;
 }
 void UserInterface::oCreditApproval()
 {
-    std::cout << "Your purchase was successful! (verification code: " << aScoMachine->getCreditApprovalCode() << ")" << std::endl;
+    std::cout << "Your purchase was successful! (verification code: " << aTransaction->getCreditApprovalCode() << ")" << std::endl;
 }
 void UserInterface::oRecieptPrompt()
 {
@@ -122,21 +137,21 @@ void UserInterface::oReciept()
     {
         std::cout << "Chris' Gross Grocery Grove" << std::endl;
         std::cout << "\nItems purchased:" << std::endl;
-        for (auto product : aScoMachine->getScannedProducts())
+        for (auto product : aTransaction->getScannedProducts())
         {
             std::cout << product.at(0) << "   $" << product.at(2) << std::endl;;
         }
-        std::cout << "\nItem Balance:   $" << aScoMachine->getRunningBalance() << std::endl;
-        std::cout << "Tax Total:      $" << aScoMachine->getFinalTax() << std::endl;
-        std::cout << "Final Bill:     $" << aScoMachine->getFinalBill() << std::endl;
-        if (cashOrCardAnswer == "card")
+        std::cout << "\nItem Balance:   $" << aTransaction->getRunningBalance() << std::endl;
+        std::cout << "Tax Total:      $" << aTransaction->getFinalTax() << std::endl;
+        std::cout << "Final Bill:     $" << aTransaction->getFinalBill() << std::endl;
+        if (paymentType == "card")
         {
-            std::cout << "\nCard verification code: " << aScoMachine->getCreditApprovalCode() << std::endl;
+            std::cout << "\nCard verification code: " << aTransaction->getCreditApprovalCode() << std::endl;
         }
         else
         {
-            std::cout << "Cash inserted:  $" << aScoMachine->getCashPayed() << std::endl;
-            std::cout << "Change:         $" << aScoMachine->getChangeOwed() << std::endl;
+            std::cout << "Cash inserted:  $" << cashInserted << std::endl;
+            std::cout << "Change:         $" << aTransaction->getChangeOwed() << std::endl;
         }
     }
     std::cout << "\nThank you for shopping!" << std::endl;
@@ -151,33 +166,62 @@ void UserInterface::oDayResults()
     std::cout << "End of day results:" << std::endl;
     std::cout << "\nChange Repository Balance:        $" << aScoMachine->getChangeRepoBalance() << std::endl;
     std::cout << "Cash Purchase Repository Balance: $" << aScoMachine->getCashPurchaseRepoBalance() << std::endl;
-    std::cout << "Total Income For Today:           $" << aScoMachine->getTotalIncome() << std::endl;
+    std::cout << "Today's Income:                   $" << aScoMachine->getDayIncome() << std::endl;
+    std::cout << "Total Income:                     $" << aScoMachine->getTotalIncome() << std::endl;
     std::cout << "\nBegin next day? (yes/no) ";
 }
 void UserInterface::dayReset()
 {
-    aScoMachine->resetRepos();
+    aScoMachine->resetMachine();
     while (aScoMachine->getMachineRunning())
     {
-        while(aTransaction->getStillScanning())
+        transaction();
+    }
+    oDayResults();
+    iNewDay();
+}
+void UserInterface::transaction()
+{
+    Transaction t;
+    aTransaction = &t;
+    oWelcomeMessage();
+    while(aTransaction->getStillScanning())
         {
-            aTransaction->scanItem();
+            iBarcode();
+            aTransaction->scanItem(barcodeString);
+            oScannedItems();
         }
+        aTransaction->calculateBalances();
         oBalances();
         oPaymentTypePrompt();
         iPaymentType();
-        transaction.pay_final_bill();
-        if (transaction.cash_purchase())
+        if (paymentType == "cash")
         {
-            change_repo_balance -= transaction.get_change_given_amount();
-            cash_purchase_repo_balance += transaction.get_final_bill();
+            oInsertCashPrompt();
+            iCashInserted();
+            aTransaction->calculateChange(cashInserted);
+            oChange();
         }
-        total_income += transaction.get_final_bill();
-        transaction.print_reciept();
-        if (change_repo_balance < change_emptied_amount || !transaction.get_more_customers())
+        else
         {
-            machine_running = 0;
+            aTransaction->approveCredit();
+            oCreditApproval();
         }
-    }
-    display_day_results();
+        oRecieptPrompt();
+        iReciept();
+        if (recieptAnswer == "yes")
+        {
+            oReciept();
+        }
+        oMoreCustomersPrompt();
+        iMoreCustomers();
+        aScoMachine->updateMachine(cashInserted, aTransaction->getChangeOwed(), aTransaction->getFinalBill(), moreCustomers);
+}
+bool UserInterface::getNewDay()
+{
+    return newDay;
+}
+void UserInterface::oGoodbye()
+{
+    std::cout << "\nGoodbye!" << std::endl;
 }

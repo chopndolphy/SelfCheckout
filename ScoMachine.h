@@ -1,45 +1,27 @@
 #pragma once
-#include "Transaction.h"
-
-
 class ScoMachine
 {
     public:
-        ScoMachine ( Transaction *t );
+        ScoMachine ();
         void transaction();
-        void resetRepos();
-        void display_day_results();
-        bool get_new_day();
-        std::vector <std::vector<std::string>> getScannedProducts();
-        double getFinalTax();
-        double getRunningBalance();
-        double getFinalBill();
-        int getChangeDollars();
-        int getChangeQuarters();
-        int getChangeDimes();
-        int getChangeNickels();
-        int getChangePennies();
-        double getCashPayed();
-        double getChangeOwed();
+        void resetMachine();
         double getTotalIncome();
-        int getCreditApprovalCode();
+        double getDayIncome();
         double getChangeRepoBalance();
         double getCashPurchaseRepoBalance();
         bool getMachineRunning();
-
+        void updateMachine(double cashInserted, double changeGiven, double finalBill, bool moreCustomers);
     
     public:
         
-        const static double change_refill_amount;
-        const static double change_emptied_amount;
+        const static double changeRefillAmount;
+        const static double changeEmptiedAmount;
         
 
     private:
-        Transaction *aTransaction;
-        double total_income {0};
-        double change_repo_balance {change_refill_amount};
-        double cash_purchase_repo_balance {0};
+        double totalIncome {0};
+        double changeRepoBalance {changeRefillAmount};
+        double cashPurchaseRepoBalance {0};
         bool machineRunning {1};
-        bool new_day {1};
-        std::string new_day_answer;
+        double dayIncome {0};
 };

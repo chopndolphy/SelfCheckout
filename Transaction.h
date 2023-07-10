@@ -6,14 +6,11 @@ class Transaction
 {
     public:
         Transaction();
-        void scanItem();
+        void scanItem(std::string barcode);
         void resetTransaction();
-        void calculateChange();
+        void calculateChange(double cashPayed);
         void calculateBalances();
-        double getFinalBill();
         bool getStillScanning();
-        bool getMoreCustomers();
-        bool cashPurchase();
         std::vector <std::vector<std::string>> getScannedProducts();
         double getRunningBalance();
         double getFinalTax();
@@ -23,11 +20,9 @@ class Transaction
         int getChangeDimes();
         int getChangeNickels();
         int getChangePennies();
-        double getCashPayed();
         double getChangeOwed();
         int getCreditApprovalCode();
         void approveCredit();
-        // auto getOutput(std::string outputType);
         
 
     public:
@@ -36,7 +31,6 @@ class Transaction
 
     private:
         double runningBalance {0};
-        double cashPayed {0};
         int centsRemaining {0};
         double changeOwed {0};
         double finalTax {0};
@@ -53,8 +47,6 @@ class Transaction
         int currentBarcode {0};
         std::vector <std::vector<std::string>> scannedProducts;
         bool stillScanning {1};
-        bool moreCustomers {0};
-        std::string currentBarcodeString {""};
         std::string cashOrCardAnswer {""};
         std::string moreCustomersAnswer {""};
 };

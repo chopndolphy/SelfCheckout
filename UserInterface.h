@@ -11,15 +11,17 @@ class UserInterface
         ScoMachine *aScoMachine;
         Transaction *aTransaction;
         std::string barcodeString;
-        std::string cashOrCardAnswer;
+        std::string paymentType;
         std::string recieptAnswer;
         std::string moreCustomersAnswer;
         std::string newDayAnswer;
-        double cashInserted;
+        double cashInserted {0};
+        bool newDay {1};
+        bool moreCustomers {1};
 
     
     public:
-        UserInterface ( ScoMachine *s, Transaction *t );
+        UserInterface ( ScoMachine *s );
         void iBarcode();
         void iPaymentType();
         void iReciept();
@@ -37,5 +39,9 @@ class UserInterface
         void oReciept();
         void oMoreCustomersPrompt();
         void oDayResults();
+        void oGoodbye();
         void dayReset();
+        void transaction();
+        bool getNewDay();
+        double getCashInserted();
 };
