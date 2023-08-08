@@ -3,48 +3,98 @@
 UserInterface::UserInterface(ScoMachine *s)
 {
     aScoMachine = s;
+    for (size_t i = 0; i < Transaction::productList.size(); i++)
+    {
+        availableBarcodes.push_back(std::to_string(i));
+    }
+    availableBarcodes.push_back("done");
 }
-void UserInterface::iBarcode()
+void UserInterface::readBarcode()
 {
     std::cin >> barcodeString;
+    if (std::find(std::begin(availableBarcodes), std::end(availableBarcodes), barcodeString) != std::end(availableBarcodes))
+    {
+        success = 1;
+    }
+    else
+    {
+        std::cout << "Invalid input. Try again." << std::endl;
+    }
 }
-void UserInterface::iPaymentType()
+void UserInterface::specifyPaymentType()
 {
     std::cin >> paymentType;
+    if (paymentType == "cash" || "card")
+    {
+        success = 1;
+    }
+    else
+    {
+        std::cout << "Invalide input. Try again." << std::endl;
+    }
 }
-void UserInterface::iReciept()
+void UserInterface::askIfRecieptNeeded()
 {
     std::cin >> recieptAnswer;
+    if (recieptAnswer == "yes" || "no")
+    {
+        success = 1;
+    }
+    else
+    {
+        std::cout << "Invalid input. Try again." << std::endl;
+    }
 }
-void UserInterface::iMoreCustomers()
+void UserInterface::askIfMoreCustomers()
 {
     std::cin >> moreCustomersAnswer;
     if (moreCustomersAnswer == "yes")
     {
         moreCustomers = 1;
+        success = 1;
+    }
+    else if (moreCustomersAnswer == "no")
+    {
+        moreCustomers = 0;
+        success = 1;
     }
     else
     {
-        moreCustomers = 0;
+        std::cout << "Invalid input. Try again." << std::endl;
     }
 }
-void UserInterface::iCashInserted()
+void UserInterface::insertCash()
 {
-    std::cin >> cashInserted;
+    if (std::cin >> cashInserted)
+    {
+        success = 1;
+    }
+    else
+    {
+        std::cout << "Invalid input. Try again." << std::endl;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
 }
-void UserInterface::iNewDay()
+void UserInterface::askIfNewDay()
 {
     std::cin >> newDayAnswer;
     if (newDayAnswer == "no")
     {
-        newDay = 0;
+        running = 0;
+        success = 1;
+    }
+    else if (newDayAnswer == "yes")
+    {
+        running = 1;
+        success = 1;
     }
     else
     {
-        newDay = 1;
+        std::cout << "Invalid input. Try again." << std::endl;
     }
 }
-void UserInterface::oWelcomeMessage()
+void UserInterface::displayWelcomeMessage()
 {
     system("clear");
     std::cout << "Welcome to Self-Checkout at Chris' Gross Grocery Grove!" << std::endl;
@@ -76,7 +126,7 @@ void UserInterface::oWelcomeMessage()
     )" << std::endl;
     std::cout << "\nEnter barcode number to begin scanning" << std::endl;
 }
-void UserInterface::oScannedItems()
+void UserInterface::displayScannedItems()
 {
     system("clear");
     int i = 1;
@@ -99,20 +149,20 @@ void UserInterface::oScannedItems()
     }
     std::cout << "\n(Type 'done' to finish scanning.                 Balance: $" << aTransaction->getRunningBalance() << std::endl;
 }
-void UserInterface::oBalances()
+void UserInterface::displayBalances()
 {
     std::cout << "\n                                                     Tax: $" << aTransaction->getFinalTax() << std::endl;
     std::cout << "\n                                              Final Bill: $" << aTransaction->getFinalBill() << std::endl;
 }
-void UserInterface::oPaymentTypePrompt()
+void UserInterface::displayPaymentTypePrompt()
 {
     std::cout << "\nHow would you like to pay? (cash/card) ";
 }
-void UserInterface::oInsertCashPrompt()
+void UserInterface::displayInsertCashPrompt()
 {
     std::cout << "Please insert your payment: $";
 }
-void UserInterface::oChange()
+void UserInterface::displayChange()
 {
     std::cout << "\nYou inserted: $" << cashInserted << std::endl;
     std::cout << "Your change: $" << aTransaction->getChangeOwed() << std::endl;
@@ -122,15 +172,15 @@ void UserInterface::oChange()
     std::cout << "Nickels: " << aTransaction->getChangeNickels() << std::endl;
     std::cout << "Pennies: " << aTransaction->getChangePennies() << std::endl;
 }
-void UserInterface::oCreditApproval()
+void UserInterface::displayCreditApproval()
 {
     std::cout << "Your purchase was successful! (verification code: " << aTransaction->getCreditApprovalCode() << ")" << std::endl;
 }
-void UserInterface::oRecieptPrompt()
+void UserInterface::displayRecieptPrompt()
 {
     std::cout << "\nWould you like a reciept? (yes/no) ";
 }
-void UserInterface::oReciept()
+void UserInterface::displayReciept()
 {
     system("clear");
     if (recieptAnswer == "yes")
@@ -156,11 +206,11 @@ void UserInterface::oReciept()
     }
     std::cout << "\nThank you for shopping!" << std::endl;
 }
-void UserInterface::oMoreCustomersPrompt()
+void UserInterface::displayMoreCustomersPrompt()
 {
     std::cout << "\nAre there more customers for today? (yes/no) " << std::endl;
 }
-void UserInterface::oDayResults()
+void UserInterface::displayDayResults()
 {
     system("clear");
     std::cout << "End of day results:" << std::endl;
@@ -173,55 +223,72 @@ void UserInterface::oDayResults()
 void UserInterface::dayReset()
 {
     aScoMachine->resetMachine();
-    while (aScoMachine->getMachineRunning())
-    {
-        transaction();
-    }
-    oDayResults();
-    iNewDay();
 }
-void UserInterface::transaction()
+void UserInterface::runTransactions()
 {
-    Transaction t;
-    aTransaction = &t;
-    oWelcomeMessage();
-    while(aTransaction->getStillScanning())
-        {
-            iBarcode();
-            aTransaction->scanItem(barcodeString);
-            oScannedItems();
-        }
+    while (aScoMachine->isAvailable())
+    {
+        Transaction t;
+        aTransaction = &t;
+        displayWelcomeMessage();
+        while(aTransaction->isScanning())
+            {
+                success = 0;
+                while (!success)
+                {
+                    readBarcode();
+                }
+                aTransaction->scanItem(barcodeString);
+                displayScannedItems();
+            }
         aTransaction->calculateBalances();
-        oBalances();
-        oPaymentTypePrompt();
-        iPaymentType();
+        displayBalances();
+        displayPaymentTypePrompt();
+        success = 0;
+        while (!success)
+        {
+            specifyPaymentType();
+        }
         if (paymentType == "cash")
         {
-            oInsertCashPrompt();
-            iCashInserted();
+            displayInsertCashPrompt();
+            success = 0;
+            while (!success)
+            {
+                insertCash();
+            }
             aTransaction->calculateChange(cashInserted);
-            oChange();
+            displayChange();
         }
         else
         {
             aTransaction->approveCredit();
-            oCreditApproval();
+            displayCreditApproval();
         }
-        oRecieptPrompt();
-        iReciept();
+        displayRecieptPrompt();
+        success = 0;
+        while (!success)
+        {
+            askIfRecieptNeeded();
+        }
         if (recieptAnswer == "yes")
         {
-            oReciept();
+            displayReciept();
         }
-        oMoreCustomersPrompt();
-        iMoreCustomers();
+        displayMoreCustomersPrompt();
+        success = 0;
+        while (!success)
+        {
+            askIfMoreCustomers();
+        }
         aScoMachine->updateMachine(cashInserted, aTransaction->getChangeOwed(), aTransaction->getFinalBill(), moreCustomers);
+    }
 }
-bool UserInterface::getNewDay()
+bool UserInterface::isRunning()
 {
-    return newDay;
+    return running;
 }
-void UserInterface::oGoodbye()
+void UserInterface::displayGoodbye()
 {
     std::cout << "\nGoodbye!" << std::endl;
 }

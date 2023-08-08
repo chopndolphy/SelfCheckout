@@ -19,13 +19,13 @@ const std::vector <std::vector<std::string>> Transaction::productList
 };
 Transaction::Transaction()
 {
-    stillScanning = 1;
+    scanning = 1;
 }
 void Transaction::scanItem(std::string barcode)
 {
     if (barcode == "done")
     {
-        stillScanning = 0;
+        scanning = 0;
         return;
     }
     currentBarcode = stoi(barcode);
@@ -63,9 +63,9 @@ double Transaction::getFinalBill()
 {
     return finalBill;
 }
-bool Transaction::getStillScanning()
+bool Transaction::isScanning()
 {
-    return stillScanning;
+    return scanning;
 }
 std::vector <std::vector<std::string>> Transaction::getScannedProducts()
 {

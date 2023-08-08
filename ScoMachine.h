@@ -3,13 +3,12 @@ class ScoMachine
 {
     public:
         ScoMachine ();
-        void transaction();
         void resetMachine();
         double getTotalIncome();
         double getDayIncome();
         double getChangeRepoBalance();
         double getCashPurchaseRepoBalance();
-        bool getMachineRunning();
+        bool isAvailable();
         void updateMachine(double cashInserted, double changeGiven, double finalBill, bool moreCustomers);
     
     public:

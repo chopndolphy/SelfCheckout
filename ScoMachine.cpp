@@ -27,7 +27,7 @@ double ScoMachine::getCashPurchaseRepoBalance()
 {
     return cashPurchaseRepoBalance;
 }
-bool ScoMachine::getMachineRunning()
+bool ScoMachine::isAvailable()
 {
     return machineRunning;
 }

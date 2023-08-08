@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <limits>
 #include "ScoMachine.h"
 #include "Transaction.h"
 
@@ -16,32 +17,34 @@ class UserInterface
         std::string moreCustomersAnswer;
         std::string newDayAnswer;
         double cashInserted {0};
-        bool newDay {1};
+        bool running {1};
         bool moreCustomers {1};
+        bool success {0};
+        std::vector<std::string> availableBarcodes;
 
     
     public:
         UserInterface ( ScoMachine *s );
-        void iBarcode();
-        void iPaymentType();
-        void iReciept();
-        void iMoreCustomers();
-        void iCashInserted();
-        void iNewDay();
-        void oWelcomeMessage();
-        void oScannedItems();
-        void oBalances();
-        void oPaymentTypePrompt();
-        void oInsertCashPrompt();
-        void oChange();
-        void oCreditApproval();
-        void oRecieptPrompt();
-        void oReciept();
-        void oMoreCustomersPrompt();
-        void oDayResults();
-        void oGoodbye();
+        void readBarcode();
+        void specifyPaymentType();
+        void askIfRecieptNeeded();
+        void askIfMoreCustomers();
+        void insertCash();
+        void askIfNewDay();
+        void displayWelcomeMessage();
+        void displayScannedItems();
+        void displayBalances();
+        void displayPaymentTypePrompt();
+        void displayInsertCashPrompt();
+        void displayChange();
+        void displayCreditApproval();
+        void displayRecieptPrompt();
+        void displayReciept();
+        void displayMoreCustomersPrompt();
+        void displayDayResults();
+        void displayGoodbye();
         void dayReset();
-        void transaction();
-        bool getNewDay();
+        void runTransactions();
+        bool isRunning();
         double getCashInserted();
 };

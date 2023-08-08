@@ -5,10 +5,13 @@ int main()
     ScoMachine s;
     UserInterface anInterface(&s);
 
-    while (anInterface.getNewDay())
+    while (anInterface.isRunning())
     {
         anInterface.dayReset();
+        anInterface.runTransactions();
+        anInterface.displayDayResults();
+        anInterface.askIfNewDay();
     }
-    anInterface.oGoodbye();
+    anInterface.displayGoodbye();
     return 0;
 }

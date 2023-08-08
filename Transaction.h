@@ -11,7 +11,7 @@ class Transaction
         void resetTransaction();
         void calculateChange(double cashPayed);
         void calculateBalances();
-        bool getStillScanning();
+        bool isScanning();
         std::vector <std::vector<std::string>> getScannedProducts();
         double getRunningBalance();
         double getFinalTax();
@@ -47,7 +47,7 @@ class Transaction
         int creditApprovalCode {0};
         int currentBarcode {0};
         std::vector <std::vector<std::string>> scannedProducts;
-        bool stillScanning {1};
+        bool scanning {1};
         std::string cashOrCardAnswer {""};
         std::string moreCustomersAnswer {""};
 };
