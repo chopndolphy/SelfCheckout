@@ -3,14 +3,11 @@
 #include <iostream>
 #include <string>
 #include <limits>
-#include "ScoMachine.h"
-#include "Transaction.h"
+#include <vector>
+#include <algorithm>
 
-class UserInterface
-{
+class UserInterface {
     private:
-        ScoMachine *aScoMachine;
-        Transaction *aTransaction;
         std::string barcodeString;
         std::string paymentType;
         std::string recieptAnswer;
@@ -19,18 +16,17 @@ class UserInterface
         double cashInserted {0};
         bool running {1};
         bool moreCustomers {1};
-        bool success {0};
         std::vector<std::string> availableBarcodes;
 
     
     public:
-        UserInterface ( ScoMachine *s );
-        void readBarcode();
-        void specifyPaymentType();
-        void askIfRecieptNeeded();
-        void askIfMoreCustomers();
-        void insertCash();
-        void askIfNewDay();
+        UserInterface ();
+        std::string readBarcode();
+        bool askIfPayingCash();
+        bool askIfRecieptNeeded();
+        bool askIfMoreCustomers();
+        double insertCash();
+        bool askIfNewDay();
         void displayWelcomeMessage();
         void displayScannedItems();
         void displayBalances();
@@ -42,9 +38,11 @@ class UserInterface
         void displayReciept();
         void displayMoreCustomersPrompt();
         void displayDayResults();
-        void displayGoodbye();
         void dayReset();
         void runTransactions();
-        bool isRunning();
-        double getCashInserted();
+        void displayGoodbye();
+        
+        bool isRunning() {
+            return running;
+        }   
 };

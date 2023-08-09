@@ -1,0 +1,26 @@
+#pragma once
+#include "ScoMachine.h"
+#include "UserInterface.h"
+#include "Transaction.h"
+
+class MachineController {
+    public:
+        MachineController(UserInterface* interface, ScoMachine* machine);
+        void executeAction();
+        void exitAction();
+
+        State getState() {
+            return pMachine->getState();
+        }
+    private:
+        UserInterface* pInterface;
+        ScoMachine* pMachine;
+
+        void resetAction();
+        void scanAction();
+        void paymentAction();
+        void resultsAction();
+
+        
+        
+};

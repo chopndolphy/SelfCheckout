@@ -1,17 +1,13 @@
-#include "UserInterface.h"
+#include "MachineController.h"
 
-int main()
-{
+int main() {
     ScoMachine s;
-    UserInterface anInterface(&s);
+    UserInterface i;
+    MachineController controller(&i, &s);
 
-    while (anInterface.isRunning())
-    {
-        anInterface.dayReset();
-        anInterface.runTransactions();
-        anInterface.displayDayResults();
-        anInterface.askIfNewDay();
+    while (controller.getState() != State::Exit) {
+        controller.executeAction();
     }
-    anInterface.displayGoodbye();
+    controller.exitAction();
     return 0;
 }

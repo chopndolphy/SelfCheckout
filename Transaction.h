@@ -3,27 +3,50 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
-class Transaction
-{
+class Transaction {
     public:
         Transaction();
         void scanItem(std::string barcode);
-        void resetTransaction();
         void calculateChange(double cashPayed);
         void calculateBalances();
-        bool isScanning();
-        std::vector <std::vector<std::string>> getScannedProducts();
-        double getRunningBalance();
-        double getFinalTax();
-        double getFinalBill();
-        int getChangeDollars();
-        int getChangeQuarters();
-        int getChangeDimes();
-        int getChangeNickels();
-        int getChangePennies();
-        double getChangeOwed();
-        int getCreditApprovalCode();
         void approveCredit();
+        
+        double Transaction::getFinalBill(){
+            return finalBill;
+        }
+        bool Transaction::isScanning() {
+            return scanning;
+        }
+        std::vector <std::vector<std::string>> Transaction::getScannedProducts() {
+            return scannedProducts;
+        }
+        double Transaction::getRunningBalance() {
+            return runningBalance;
+        }
+        double Transaction::getFinalTax() {
+            return finalTax;
+        }
+        int Transaction::getChangeDollars() {
+            return changeDollars;
+        }
+        int Transaction::getChangeQuarters() {
+            return changeQuarters;
+        }
+        int Transaction::getChangeDimes() {
+            return changeDimes;
+        }
+        int Transaction::getChangeNickels() {
+            return changeNickels;
+        }
+        int Transaction::getChangePennies() {
+            return changePennies;
+        }
+        double Transaction::getChangeOwed() {
+            return changeOwed;
+        }
+        int Transaction::getCreditApprovalCode() {
+            return creditApprovalCode;
+        }
         
 
     public:
