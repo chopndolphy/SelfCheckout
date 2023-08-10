@@ -3,13 +3,24 @@
 Reader::Reader() {
 
 }
-std::map<std::string, Product*> Reader::readProductList() {
-    std::map<std::string, Product*> productList;
-    //make product objects from lines of product list csv file and populate into productList
-    return productList;
-}
-std::string Reader::readLogoArt() {
-    std::string logoArt;
-    //populate string from logoArt csv file
-    return logoArt;
+std::vector<std::vector<std::string>> Reader::readCSV(std::string fileName) {
+    std::vector<std::vector<std::string>> content;
+    std::vector<std::string> row;
+    std::string line, word;
+
+    std::fstream file (fileName, std::ios::in);
+    if (file.is_open()) {
+        while(getline(file, line)) {
+            row.clear();
+            std::stringstream str(line);
+            while(getline(str, word, ',')) {
+                row.push_back(word);
+            }
+            content.push_back(row);
+        }
+    }
+    else {
+        std::cout << "Could not open the file" << std::endl;
+    }
+    return content;
 }

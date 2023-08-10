@@ -1,14 +1,16 @@
 #pragma once
-#include <map>
 #include <string>
+#include <fstream>
+#include <vector>
+#include <sstream>
+#include <iostream>
 
 #include "Product.h"
 
 class Reader {
     public:
         Reader();
-        std::map<std::string, Product*> readProductList();
-        std::string readLogoArt();
+        std::vector<std::vector<std::string>> readCSV(std::string fileName);
     private:
 
 };

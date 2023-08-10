@@ -13,7 +13,8 @@ class ScoMachine {
         void advanceState();
         double getDayIncome();
         void updateMachine(double cashInserted, double changeGiven, double finalBill, bool moreCustomers);
-        
+        std::map<std::string, Product*> makeProductMap(std::string fileName);
+
         State getState() {
             return machineState;
         }
@@ -41,6 +42,7 @@ class ScoMachine {
         Reader* pReader;
         std::map<std::string, Product*> productList;
         std::string logoArt;
+        std::vector<std::vector<std::string>> productListFile;
         double totalIncome {0};
         double changeRepoBalance {changeRefillAmount};
         double cashPurchaseRepoBalance {0};
