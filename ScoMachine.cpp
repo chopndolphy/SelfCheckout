@@ -6,10 +6,10 @@ const double ScoMachine::changeEmptiedAmount {50};
 
 ScoMachine::ScoMachine() {
     State machineState = State::Reset;
+    machineProductMap = makeProductMap("product_list.csv");
+    logoArt = makeLogoArt("logo_art.csv");
 }
 void ScoMachine::resetMachine() {
-    makeProductMap("product_list.csv");
-
     cashPurchaseRepoBalance = 0;
     changeRepoBalance = changeRefillAmount;
     dayIncome = 0;
@@ -40,4 +40,15 @@ std::map<std::string, Product*> ScoMachine::makeProductMap(std::string fileName)
         productMap.emplace(productMapFile.at(i).at(0), products.back());
     }
     return productMap;
+}
+std::string ScoMachine::makeLogoArt(std::string fileName) {
+    std::vector<std::vector<std::string>> logoArtFile = pReader->readCSV(fileName);
+    std::string logoString;
+    for (int i = 0; i < logoArtFile.size(); i++) {
+        for (int j = 0; j < logoArtFile.at(i).size(); j++) {
+            logoString.append(logoArtFile.at(i).at(j));
+        }
+        logoString.append("\n");
+    }
+    return logoString;
 }

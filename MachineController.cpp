@@ -24,18 +24,18 @@ void MachineController::executeAction() {
 }
 void MachineController::resetAction() {
     pMachine->resetMachine();
-    pInterface->displayWelcomeMessage();
+    pInterface->displayWelcomeMessage(pMachine->getLogoArt());
 }
 void MachineController::scanAction() {
-    Transaction t;
+    Transaction t(pMachine->getProductMap());
     Transaction* pTransaction;
     while(pTransaction->isScanning()) {
         pTransaction->scanItem(pInterface->readBarcode());
-        pInterface->displayScannedItems();
+        pInterface->displayScannedItems(pTransaction->getScannedProducts(), pTransaction->getScannedProducts().size(), pTransaction->getRunningBalance());
     }
 }
 void MachineController::paymentAction() {
-
+    
 }
 void MachineController::resultsAction() {
 

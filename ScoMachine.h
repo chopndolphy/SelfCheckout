@@ -14,6 +14,7 @@ class ScoMachine {
         double getDayIncome();
         void updateMachine(double cashInserted, double changeGiven, double finalBill, bool moreCustomers);
         std::map<std::string, Product*> makeProductMap(std::string fileName);
+        std::string makeLogoArt(std::string fileName);
 
         State getState() {
             return machineState;
@@ -27,11 +28,14 @@ class ScoMachine {
         double getCashPurchaseRepoBalance() {
             return cashPurchaseRepoBalance;
         }
-        bool isAvailable() {
-            return machineRunning;
-        }
         double getDayIncome() {
             return dayIncome;
+        }
+        std::string getLogoArt() {
+            return logoArt;
+        }
+        std::map<std::string, Product*> getProductMap() {
+            return machineProductMap;
         }
     public:
         
@@ -40,9 +44,8 @@ class ScoMachine {
     
     private:
         Reader* pReader;
-        std::map<std::string, Product*> productList;
+        std::map<std::string, Product*> machineProductMap;
         std::string logoArt;
-        std::vector<std::vector<std::string>> productListFile;
         double totalIncome {0};
         double changeRepoBalance {changeRefillAmount};
         double cashPurchaseRepoBalance {0};

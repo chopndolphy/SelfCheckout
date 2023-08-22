@@ -1,30 +1,32 @@
 #include "Transaction.h"
 
 const double Transaction::taxRate {.05};
-const std::vector <std::vector<std::string>> Transaction::productList {
-    {"Meat01       ", "T-Bone Steak                       ", "7.99"},
-    {"Meat02       ", "Tyson Fresh Chicken Wings          ", "10.00"},
-    {"Icecream01   ", "Chocolate Ice Cream                ", "2.50"},
-    {"Iceceam02    ", "Vanilla Ice Cream                  ", "2.50"},
-    {"Corn01       ", "Fresh Sweet Corn                   ", "2.00"},
-    {"Casewater01  ", "24 Bottles 16-Oz of Deer Park Water", "4.99"},
-    {"Potatochips01", "Plain Potato Chips                 ", "2.00"},
-    {"Potatochips02", "Green Onion Potato Chips           ", "2.00"},
-    {"Donuts01     ", "Glazed Donuts One-Dozen            ", "4.99"},
-    {"Saugage01    ", "8-Sausage Pack                     ", "4.99"},
-    {"Eggs01       ", "Dozen Eggs                         ", "3.00"},
-    {"Milk01       ", "Gallon Milk                        ", "4.00"}
-};
-Transaction::Transaction() {
+// const std::vector <std::vector<std::string>> Transaction::productList {
+//     {"Meat01       ", "T-Bone Steak                       ", "7.99"},
+//     {"Meat02       ", "Tyson Fresh Chicken Wings          ", "10.00"},
+//     {"Icecream01   ", "Chocolate Ice Cream                ", "2.50"},
+//     {"Iceceam02    ", "Vanilla Ice Cream                  ", "2.50"},
+//     {"Corn01       ", "Fresh Sweet Corn                   ", "2.00"},
+//     {"Casewater01  ", "24 Bottles 16-Oz of Deer Park Water", "4.99"},
+//     {"Potatochips01", "Plain Potato Chips                 ", "2.00"},
+//     {"Potatochips02", "Green Onion Potato Chips           ", "2.00"},
+//     {"Donuts01     ", "Glazed Donuts One-Dozen            ", "4.99"},
+//     {"Saugage01    ", "8-Sausage Pack                     ", "4.99"},
+//     {"Eggs01       ", "Dozen Eggs                         ", "3.00"},
+//     {"Milk01       ", "Gallon Milk                        ", "4.00"}
+// };
+Transaction::Transaction(std::map<std::string, Product*> productMap) {
     scanning = 1;
+    runningBalance = 0.0;
+    transactionProductMap = productMap;
 }
 void Transaction::scanItem(std::string barcode) {
     if (barcode == "done") {
         scanning = 0;
         return;
     }
-    scannedProducts.push_back(productList.at(stoi(barcode)));
-    runningBalance += stod(scannedProducts.back().at(2));
+    scannedProducts.push_back(transactionProductMap.at(barcode));
+    runningBalance += stod(scannedProducts.back()->getProductPrice());
 }
 void Transaction::calculateBalances() {
     runningBalancePennies = runningBalance * 100;

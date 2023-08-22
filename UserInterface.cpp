@@ -73,52 +73,44 @@ bool UserInterface::askIfNewDay() {
         std::cout << "Invalid input. Try again." << std::endl;
     }
 }
-void UserInterface::displayWelcomeMessage() {
+void UserInterface::displayWelcomeMessage(std::string art) {
     system("clear");
     std::cout << "Welcome to Self-Checkout at Chris' Gross Grocery Grove!" << std::endl;
-    std::cout << R"(
-          .
-        ('
-        '|
-        |'
-       [::]
-       [::]   _......_
-       [::].-'      _.-`.
-       [:.'    .-. '-._.-`.
-       [/ /\   |  \        `-..
-       / / |   `-.'      .-.   `-.
-      /  `-'            (   `.    `.
-     |           /\      `-._/      \
-     '    .'\   /  `.           _.-'|
-    /    /  /   \_.-'        _.':;:/
-  .'     \_/             _.-':;_.-'
- /   .-.             _.-' \;.-'
-/   (   \       _..-'     |
-\    `._/  _..-'    .--.  |
- `-.....-'/  _ _  .'    '.|
-          | |_|_| |      | \  (o)
-     (o)  | |_|_| |      | | (\'/)
-    (\'/)/  ''''' |     o|  \;:;
-     :;  |        |      |  |/)
-      ;: `-.._    /__..--'\.' ;
-    )" << std::endl;
+    std::cout << art << std::endl;
+//     std::cout << R"(
+//           .
+//         ('
+//         '|
+//         |'
+//        [::]
+//        [::]   _......_
+//        [::].-'      _.-`.
+//        [:.'    .-. '-._.-`.
+//        [/ /\   |  \        `-..
+//        / / |   `-.'      .-.   `-.
+//       /  `-'            (   `.    `.
+//      |           /\      `-._/      \
+//      '    .'\   /  `.           _.-'|
+//     /    /  /   \_.-'        _.':;:/
+//   .'     \_/             _.-':;_.-'
+//  /   .-.             _.-' \;.-'
+// /   (   \       _..-'     |
+// \    `._/  _..-'    .--.  |
+//  `-.....-'/  _ _  .'    '.|
+//           | |_|_| |      | \  (o)
+//      (o)  | |_|_| |      | | (\'/)
+//     (\'/)/  ''''' |     o|  \;:;
+//      :;  |        |      |  |/)
+//       ;: `-.._    /__..--'\.' ;
+//     )" << std::endl;
     std::cout << "\nEnter barcode number to begin scanning" << std::endl;
 }
-void UserInterface::displayScannedItems() {
+void UserInterface::displayScannedItems(std::vector<Product*> scannedProducts, size_t scannedProductsSize, double runningBalance) {
     system("clear");
-    int i = 1;
-    for (auto product : aTransaction->getScannedProducts()) {
-        std::cout << i << " | ";
-        for (auto info : product) {
-            if (info != product.back()) {
-                std::cout << info << " | ";
-            } else {
-                std::cout << "$" << info << std::endl;
-            }
+    for (int i = 0; i < scannedProductsSize; i++) {
+        std::cout << i+1 << " | " << scannedProducts.at(i)->getProductID() << " | " << scannedProducts.at(i)->getProductName() << " | $" << scannedProducts.at(i)->getProductPrice() << std::endl;
         }
-        ++i;
-    }
-    std::cout << "\n(Type 'done' to finish scanning.                 Balance: $" << aTransaction->getRunningBalance() << std::endl;
+    std::cout << "\n(Type 'done' to finish scanning.                 Balance: $" << runningBalance << std::endl;
 }
 void UserInterface::displayBalances() {
     std::cout << "\n                                                     Tax: $" << aTransaction->getFinalTax() << std::endl;

@@ -3,9 +3,11 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <map>
+#include "Product.h"
 class Transaction {
     public:
-        Transaction();
+        Transaction(std::map<std::string, Product*> productList);
         void scanItem(std::string barcode);
         void calculateChange(double cashPayed);
         void calculateBalances();
@@ -17,7 +19,7 @@ class Transaction {
         bool Transaction::isScanning() {
             return scanning;
         }
-        std::vector <std::vector<std::string>> Transaction::getScannedProducts() {
+        std::vector<Product*> Transaction::getScannedProducts() {
             return scannedProducts;
         }
         double Transaction::getRunningBalance() {
@@ -51,7 +53,7 @@ class Transaction {
 
     public:
         const static double taxRate;
-        const static std::vector <std::vector<std::string>> productList;
+        // const static std::vector <std::vector<std::string>> productList;
 
     private:
         double runningBalance {0};
@@ -69,8 +71,9 @@ class Transaction {
         int changePennies {0};
         int creditApprovalCode {0};
         int currentBarcode {0};
-        std::vector <std::vector<std::string>> scannedProducts;
+        std::vector<Product*> scannedProducts;
         bool scanning {1};
         std::string cashOrCardAnswer {""};
         std::string moreCustomersAnswer {""};
+        std::map<std::string, Product*> transactionProductMap;
 };

@@ -5,6 +5,8 @@
 #include <limits>
 #include <vector>
 #include <algorithm>
+#include "Product.h"
+#include "Transaction.h"
 
 class UserInterface {
     private:
@@ -27,8 +29,8 @@ class UserInterface {
         bool askIfMoreCustomers();
         double insertCash();
         bool askIfNewDay();
-        void displayWelcomeMessage();
-        void displayScannedItems();
+        void displayWelcomeMessage(std::string art);
+        void displayScannedItems(std::vector<Product*> scannedProducts, size_t scannedProductsSize, double runningBalance);
         void displayBalances();
         void displayPaymentTypePrompt();
         void displayInsertCashPrompt();
