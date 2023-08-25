@@ -10,19 +10,12 @@
 
 class UserInterface {
     private:
-        std::string barcodeString;
         std::string paymentType;
-        std::string recieptAnswer;
-        std::string moreCustomersAnswer;
-        std::string newDayAnswer;
         double cashInserted {0};
-        bool running {1};
-        bool moreCustomers {1};
         std::vector<std::string> availableBarcodes;
-
     
     public:
-        UserInterface ();
+        UserInterface (std::map<std::string, Product*> productMap);
         std::string readBarcode();
         bool askIfPayingCash();
         bool askIfRecieptNeeded();
@@ -30,21 +23,11 @@ class UserInterface {
         double insertCash();
         bool askIfNewDay();
         void displayWelcomeMessage(std::string art);
-        void displayScannedItems(std::vector<Product*> scannedProducts, size_t scannedProductsSize, double runningBalance);
-        void displayBalances();
-        void displayPaymentTypePrompt();
-        void displayInsertCashPrompt();
-        void displayChange();
-        void displayCreditApproval();
-        void displayRecieptPrompt();
-        void displayReciept();
-        void displayMoreCustomersPrompt();
-        void displayDayResults();
-        void dayReset();
-        void runTransactions();
+        void displayScannedItems(std::vector<Product*> scannedProducts, double runningBalance);
+        void displayBalances(double finalTax, double finalBill);
+        void displayChange(double cash, double totalChange, std::vector<int> changeQuantities);
+        void displayCreditApproval(int creditApprovalCode);
+        void displayReciept(Transaction* aTransaction);
+        void displayDayResults(double changeLeft, double cashBalance, double dayIncome, double totalIncome);
         void displayGoodbye();
-        
-        bool isRunning() {
-            return running;
-        }   
 };

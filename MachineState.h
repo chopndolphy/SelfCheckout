@@ -8,10 +8,3 @@ enum class State {
     Results = 4,
     Exit = 5
 };
-
-std::map<State, State> stateTransitions = {
-    {State::Reset, State::Scan},
-    {State::Scan, State::Payment},
-    {State::Payment, State::Results},
-    {State::Results, State::Exit}
-};

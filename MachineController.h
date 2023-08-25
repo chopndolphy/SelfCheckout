@@ -2,6 +2,7 @@
 #include "ScoMachine.h"
 #include "UserInterface.h"
 #include "Transaction.h"
+#include "MachineState.h"
 
 class MachineController {
     public:
@@ -15,12 +16,10 @@ class MachineController {
     private:
         UserInterface* pInterface;
         ScoMachine* pMachine;
+        Transaction* pTransaction;
 
         void resetAction();
         void scanAction();
         void paymentAction();
         void resultsAction();
-
-        
-        
 };

@@ -11,8 +11,7 @@ class ScoMachine {
         
         void resetMachine();
         void advanceState();
-        double getDayIncome();
-        void updateMachine(double cashInserted, double changeGiven, double finalBill, bool moreCustomers);
+        void updateMachine(double cashInserted, double changeGiven, double finalBill);
         std::map<std::string, Product*> makeProductMap(std::string fileName);
         std::string makeLogoArt(std::string fileName);
 
@@ -43,7 +42,6 @@ class ScoMachine {
         const static double changeEmptiedAmount;
     
     private:
-        Reader* pReader;
         std::map<std::string, Product*> machineProductMap;
         std::string logoArt;
         double totalIncome {0};
@@ -51,4 +49,11 @@ class ScoMachine {
         double cashPurchaseRepoBalance {0};
         double dayIncome {0};
         State machineState;
+
+        std::map<State, State> stateTransitions = {
+        {State::Reset, State::Scan},
+        {State::Scan, State::Payment},
+        {State::Payment, State::Results},
+        {State::Results, State::Exit}
+        };
 };

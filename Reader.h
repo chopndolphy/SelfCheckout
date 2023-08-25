@@ -10,7 +10,7 @@
 class Reader {
     public:
         Reader();
-        std::vector<std::vector<std::string>> readCSV(std::string fileName);
+        static std::vector<std::vector<std::string>> readCSV(std::string fileName);
     private:
 
 };

@@ -1,12 +1,13 @@
 #include "UserInterface.h"
 
-UserInterface::UserInterface() {
-    for (size_t i = 0; i < Transaction::productList.size(); i++) {
-        availableBarcodes.push_back(std::to_string(i));
+UserInterface::UserInterface(std::map<std::string, Product*> productMap) {
+    for (auto const& product : productMap) {
+        availableBarcodes.push_back(product.first);
     }
     availableBarcodes.push_back("done");
 }
 std::string UserInterface::readBarcode() {
+    std::string barcodeString;
     while (1) {
         std::cin >> barcodeString;
         if (std::find(std::begin(availableBarcodes), std::end(availableBarcodes), barcodeString) != std::end(availableBarcodes)) {
@@ -17,6 +18,7 @@ std::string UserInterface::readBarcode() {
     }
 }
 bool UserInterface::askIfPayingCash() {
+    std::cout << "\nHow would you like to pay? (cash/card) ";
     while (1) {
         std::cin >> paymentType;
         if (paymentType == "cash") {
@@ -29,6 +31,8 @@ bool UserInterface::askIfPayingCash() {
     }
 }
 bool UserInterface::askIfRecieptNeeded() {
+    std::string recieptAnswer;
+    std::cout << "\nWould you like a reciept? (yes/no) ";
     while (1) {
         std::cin >> recieptAnswer;
         if (recieptAnswer == "yes") {
@@ -41,6 +45,8 @@ bool UserInterface::askIfRecieptNeeded() {
     }
 }
 bool UserInterface::askIfMoreCustomers() {
+    std::string moreCustomersAnswer;
+    std::cout << "\nAre there more customers for today? (yes/no) " << std::endl;
     while (1) {
         std::cin >> moreCustomersAnswer;
         if (moreCustomersAnswer == "yes") {
@@ -53,6 +59,7 @@ bool UserInterface::askIfMoreCustomers() {
     }
 }
  double UserInterface::insertCash() {
+    std::cout << "Please insert your payment: $";
     while (1) {
         if (std::cin >> cashInserted) {
             return cashInserted;
@@ -64,150 +71,73 @@ bool UserInterface::askIfMoreCustomers() {
     }
 }
 bool UserInterface::askIfNewDay() {
-    std::cin >> newDayAnswer;
-    if (newDayAnswer == "no") {
-        return 0;
-    } else if (newDayAnswer == "yes") {
-        return 1;
-    } else {
-        std::cout << "Invalid input. Try again." << std::endl;
+    std::string newDayAnswer;
+    std::cout << "\nBegin next day? (yes/no) ";
+    while (1) {
+        std::cin >> newDayAnswer;
+        if (newDayAnswer == "no") {
+            return 0;
+        } else if (newDayAnswer == "yes") {
+            return 1;
+        } else {
+            std::cout << "Invalid input. Try again." << std::endl;
+        }
     }
 }
 void UserInterface::displayWelcomeMessage(std::string art) {
     system("clear");
     std::cout << "Welcome to Self-Checkout at Chris' Gross Grocery Grove!" << std::endl;
     std::cout << art << std::endl;
-//     std::cout << R"(
-//           .
-//         ('
-//         '|
-//         |'
-//        [::]
-//        [::]   _......_
-//        [::].-'      _.-`.
-//        [:.'    .-. '-._.-`.
-//        [/ /\   |  \        `-..
-//        / / |   `-.'      .-.   `-.
-//       /  `-'            (   `.    `.
-//      |           /\      `-._/      \
-//      '    .'\   /  `.           _.-'|
-//     /    /  /   \_.-'        _.':;:/
-//   .'     \_/             _.-':;_.-'
-//  /   .-.             _.-' \;.-'
-// /   (   \       _..-'     |
-// \    `._/  _..-'    .--.  |
-//  `-.....-'/  _ _  .'    '.|
-//           | |_|_| |      | \  (o)
-//      (o)  | |_|_| |      | | (\'/)
-//     (\'/)/  ''''' |     o|  \;:;
-//      :;  |        |      |  |/)
-//       ;: `-.._    /__..--'\.' ;
-//     )" << std::endl;
     std::cout << "\nEnter barcode number to begin scanning" << std::endl;
 }
-void UserInterface::displayScannedItems(std::vector<Product*> scannedProducts, size_t scannedProductsSize, double runningBalance) {
+void UserInterface::displayScannedItems(std::vector<Product*> scannedProducts, double runningBalance) {
     system("clear");
-    for (int i = 0; i < scannedProductsSize; i++) {
+    for (size_t i = 0; i < scannedProducts.size(); i++) {
         std::cout << i+1 << " | " << scannedProducts.at(i)->getProductID() << " | " << scannedProducts.at(i)->getProductName() << " | $" << scannedProducts.at(i)->getProductPrice() << std::endl;
         }
     std::cout << "\n(Type 'done' to finish scanning.                 Balance: $" << runningBalance << std::endl;
 }
-void UserInterface::displayBalances() {
-    std::cout << "\n                                                     Tax: $" << aTransaction->getFinalTax() << std::endl;
-    std::cout << "\n                                              Final Bill: $" << aTransaction->getFinalBill() << std::endl;
+void UserInterface::displayBalances(double finalTax, double finalBill) {
+    std::cout << "\n                                                     Tax: $" << finalTax << std::endl;
+    std::cout << "\n                                              Final Bill: $" << finalBill << std::endl;
 }
-void UserInterface::displayPaymentTypePrompt() {
-    std::cout << "\nHow would you like to pay? (cash/card) ";
+void UserInterface::displayChange(double cash, double totalChange, std::vector<int> changeQuantities) {
+    std::cout << "\nYou inserted: $" << cash << std::endl;
+    std::cout << "Your change: $" << totalChange << std::endl;
+    std::cout << "Dollars: " << changeQuantities.at(0) << std::endl;
+    std::cout << "Quarters: " << changeQuantities.at(1) << std::endl;
+    std::cout << "Dimes: " << changeQuantities.at(2) << std::endl;
+    std::cout << "Nickels: " << changeQuantities.at(3) << std::endl;
+    std::cout << "Pennies: " << changeQuantities.at(4) << std::endl;
 }
-void UserInterface::displayInsertCashPrompt() {
-    std::cout << "Please insert your payment: $";
+void UserInterface::displayCreditApproval(int creditApprovalCode) {
+    std::cout << "Your purchase was successful! (verification code: " << creditApprovalCode << ")" << std::endl;
 }
-void UserInterface::displayChange() {
-    std::cout << "\nYou inserted: $" << cashInserted << std::endl;
-    std::cout << "Your change: $" << aTransaction->getChangeOwed() << std::endl;
-    std::cout << "Dollars: " << aTransaction->getChangeDollars() << std::endl;
-    std::cout << "Quarters: " << aTransaction->getChangeQuarters() << std::endl;
-    std::cout << "Dimes: " << aTransaction->getChangeDimes() << std::endl;
-    std::cout << "Nickels: " << aTransaction->getChangeNickels() << std::endl;
-    std::cout << "Pennies: " << aTransaction->getChangePennies() << std::endl;
-}
-void UserInterface::displayCreditApproval() {
-    std::cout << "Your purchase was successful! (verification code: " << aTransaction->getCreditApprovalCode() << ")" << std::endl;
-}
-void UserInterface::displayRecieptPrompt() {
-    std::cout << "\nWould you like a reciept? (yes/no) ";
-}
-void UserInterface::displayReciept() {
+void UserInterface::displayReciept(Transaction* aTransaction) {
     system("clear");
-    if (recieptAnswer == "yes") {
-        std::cout << "Chris' Gross Grocery Grove" << std::endl;
-        std::cout << "\nItems purchased:" << std::endl;
-        for (auto product : aTransaction->getScannedProducts()) {
-            std::cout << product.at(0) << "   $" << product.at(2) << std::endl;;
-        }
-        std::cout << "\nItem Balance:   $" << aTransaction->getRunningBalance() << std::endl;
-        std::cout << "Tax Total:      $" << aTransaction->getFinalTax() << std::endl;
-        std::cout << "Final Bill:     $" << aTransaction->getFinalBill() << std::endl;
-        if (paymentType == "card") {
-            std::cout << "\nCard verification code: " << aTransaction->getCreditApprovalCode() << std::endl;
-        } else {
-            std::cout << "Cash inserted:  $" << cashInserted << std::endl;
-            std::cout << "Change:         $" << aTransaction->getChangeOwed() << std::endl;
-        }
+    std::cout << "Chris' Gross Grocery Grove" << std::endl;
+    std::cout << "\nItems purchased:" << std::endl;
+    for (size_t i = 0; i < aTransaction->getScannedProducts().size(); i++) {
+        std::cout << aTransaction->getScannedProducts().at(i)->getProductID() << "   $" << aTransaction->getScannedProducts().at(i)->getProductPrice() << std::endl;;
+    }
+    std::cout << "\nItem Balance:   $" << aTransaction->getRunningBalance() << std::endl;
+    std::cout << "Tax Total:      $" << aTransaction->getFinalTax() << std::endl;
+    std::cout << "Final Bill:     $" << aTransaction->getFinalBill() << std::endl;
+    if (paymentType == "card") {
+        std::cout << "\nCard verification code: " << aTransaction->getCreditApprovalCode() << std::endl;
+    } else {
+        std::cout << "Cash inserted:  $" << aTransaction->getTransactionCashPayed() << std::endl;
+        std::cout << "Change:         $" << aTransaction->getChangeOwed() << std::endl;
     }
     std::cout << "\nThank you for shopping!" << std::endl;
 }
-void UserInterface::displayMoreCustomersPrompt() {
-    std::cout << "\nAre there more customers for today? (yes/no) " << std::endl;
-}
-void UserInterface::displayDayResults() {
+void UserInterface::displayDayResults(double changeLeft, double cashBalance, double dayIncome, double totalIncome) {
     system("clear");
     std::cout << "End of day results:" << std::endl;
-    std::cout << "\nChange Repository Balance:        $" << aScoMachine->getChangeRepoBalance() << std::endl;
-    std::cout << "Cash Purchase Repository Balance: $" << aScoMachine->getCashPurchaseRepoBalance() << std::endl;
-    std::cout << "Today's Income:                   $" << aScoMachine->getDayIncome() << std::endl;
-    std::cout << "Total Income:                     $" << aScoMachine->getTotalIncome() << std::endl;
-    std::cout << "\nBegin next day? (yes/no) ";
-}
-void UserInterface::dayReset() {
-    aScoMachine->resetMachine();
-}
-void UserInterface::runTransactions() {
-        
-        aTransaction->calculateBalances();
-        displayBalances();
-        displayPaymentTypePrompt();
-        success = 0;
-        while (!success) {
-            specifyPaymentType();
-        }
-        if (paymentType == "cash") {
-            displayInsertCashPrompt();
-            success = 0;
-            while (!success) {
-                insertCash();
-            }
-            aTransaction->calculateChange(cashInserted);
-            displayChange();
-        } else {
-            aTransaction->approveCredit();
-            displayCreditApproval();
-        }
-        displayRecieptPrompt();
-        success = 0;
-        while (!success) {
-            askIfRecieptNeeded();
-        }
-        if (recieptAnswer == "yes") {
-            displayReciept();
-        }
-        displayMoreCustomersPrompt();
-        success = 0;
-        while (!success) {
-            askIfMoreCustomers();
-        }
-        aScoMachine->updateMachine(cashInserted, aTransaction->getChangeOwed(), aTransaction->getFinalBill(), moreCustomers);
-    }
+    std::cout << "\nChange Repository Balance:        $" << changeLeft << std::endl;
+    std::cout << "Cash Purchase Repository Balance: $" << cashBalance << std::endl;
+    std::cout << "Today's Income:                   $" << dayIncome << std::endl;
+    std::cout << "Total Income:                     $" << totalIncome << std::endl;
 }
 void UserInterface::displayGoodbye() {
             std::cout << "\nGoodbye!" << std::endl;
