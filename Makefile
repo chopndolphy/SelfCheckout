@@ -22,21 +22,23 @@ main: $(BIN)/self_checkout
 
 # Main executable
 $(BIN)/self_checkout: $(OBJS) $(BUILD)/self_checkout.o
-	echo $(OBJS) $(BUILD)/self_checkout.o
 	$(CXX) -o $@ $^
-
-#Test executable
-$(BIN)/$(EXE): $(OBJS) $(BUILD)/$(EXE).o
-	echo $(OBJS) $(BUILD)/$(EXE).o
-	$(CXX) -o $@ $^
-	
-#Test.o
-$(BUILD)/$(EXE).o: $(TEST)/$(EXE).cpp $(IDIR)/MachineController.h | $(BUILD)
-	$(CXX) $(CXXFLAGS) -c $(TEST)/$(EXE).cpp -o $@
 
 # Main.o
 $(BUILD)/self_checkout.o: $(MAIN_DEPS) | $(BUILD)
 	$(CXX) $(CXXFLAGS) -c $(patsubst $(BUILD)/%.o,$(SRC)/%.cpp,$@) -o $@
+
+#Test executable
+$(BIN)/$(T): $(OBJS) $(BUILD)/$(T).o
+	$(CXX) -o $@ $^
+
+#Test.o
+$(BUILD)/$(T).o: $(TEST)/$(T).cpp $(IDIR)/MachineController.h | $(BUILD)
+	$(CXX) $(CXXFLAGS) -c $(TEST)/$(T).cpp -o $@
+
+#Spike executable
+$(SPIKE)/$(S).out: $(SPIKE)/$(S).cpp
+	$(CXX) -g $^ -o $@
 
 # All .o files
 $(BUILD)/%.o: $(SRC)/%.cpp $(IDIR)/%.h | $(BUILD)
@@ -63,9 +65,12 @@ $(BUILD)/MachineController.o $(BUILD)/ScoMachine.o: $(IDIR)/Transaction.h | $(BU
 $(BUILD):
 	mkdir -p $(BUILD)
 
-.phony: clean test
+.phony: clean test spike
 
 clean:
 	rm -rf $(BUILD)
+	rm $(SPIKE)/*.out
 
-test: $(BIN)/$(EXE)
+test: $(BIN)/$(T)
+
+spike: $(SPIKE)/$(S).out
