@@ -60,4 +60,4 @@ Afterwards, you will be asked if there are more customers for the day (for a fut
 | Eggs01        | Dozen Eggs                          |  $3.00 |
 | Milk01        | Gallon Milk                         |  $4.00 |
 
-# Thank You!
+### Thank You!
