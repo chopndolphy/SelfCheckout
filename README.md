@@ -26,15 +26,14 @@ SelfCheckout is a console application that emulates the functionality of a groce
 - README files!
 There is no way to tell when the project will be retired as a learning tool, but it is likely to change dramatically while it still employed!
 ## Building and Running Your Executable
-SelfCheckout is only available for UNIX console environments. When within the project directory and with gnu make install, enter:
+SelfCheckout is only available for UNIX console environments. When within the project directory and with gnu make install, enter to build the executable:
 ```
 make main
 ```
-to build the executable and then enter:
+Then to run the program:
 ```
 /bin/./self_checkout
 ```
-to run the program.
 ## Program Loop
 SelfCheckout works by entering in available barcodes, one by one. As you scan your items, the ID, Name, and price are added to the display and the running total is updated. When you enter "done", the tax and final balance is calculated and displayed. 
 
@@ -59,5 +58,5 @@ Afterwards, you will be asked if there are more customers for the day (for a fut
 | Saugage01     | 8-Sausage Pack                      |  $4.99 |
 | Eggs01        | Dozen Eggs                          |  $3.00 |
 | Milk01        | Gallon Milk                         |  $4.00 |
-#
-Thank You!
+
+# Thank You!
