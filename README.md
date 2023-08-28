@@ -3,6 +3,7 @@ Version 1.8.28
 ## Changelog
 ### 1.8.28
 - Fixed issue of clearing the productMap, when constructing a new product, which also fixed the stod bug.
+- Expanded Makefile for spike tests.
 ### 1.8.27
 - Project restructed according to Hiltmon C++ Project Structure guide.
 - product_list.csv reformatted to remove space padding. Space padding is now dynamically added in UserInterface::displayScannedItems() and UserInterface::displayReciept()
