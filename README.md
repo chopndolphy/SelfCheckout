@@ -40,7 +40,9 @@ SelfCheckout works by entering in available barcodes, one by one. As you scan yo
 
 You have the option to pay either with cash or card. If you pay with cash, you must enter the amount that you are inserting. The machine will then calculate and display the correct change in the minimum units of currency ($USD). If you choose to pay with card, you are given a randomized 7-digit credit authorization code.
 
-You are then asked if you need a reciept. The reciept displays every product ID and product price, the calculate balance, tax, and final balance, and your inserted cash and recieved change (if cash is chosen) or your credit authorization code (if card is chosen). Afterwards, you will be asked if there are more customers for the day (for a future feature). Lastly, the machine displays the cash deposited for the day, the change left for the day, the daily income, and the total income.
+You are then asked if you need a reciept. The reciept displays every product ID and product price, the calculate balance, tax, and final balance, and your inserted cash and recieved change (if cash is chosen) or your credit authorization code (if card is chosen). 
+
+Afterwards, you will be asked if there are more customers for the day (for a future feature). Lastly, the machine displays the cash deposited for the day, the change left for the day, the daily income, and the total income.
 ## Available Products
 
 | Product ID    | Product Name                        | Price  |
