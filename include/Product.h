@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-
 class Product {
     public:
         Product(std::string id, std::string name, std::string price);
@@ -13,7 +12,6 @@ class Product {
         std::string getProductPrice() {
             return productPrice;
         }
-    
     private:
         std::string productID;
         std::string productName;

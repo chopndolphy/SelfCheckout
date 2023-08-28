@@ -2,9 +2,11 @@
 
 MachineController::MachineController(UserInterface* interface, ScoMachine* machine) {
     pInterface = interface;
-    pMachine = machine;
-    Transaction t(pMachine->getProductMap());
-    pTransaction = &t;
+    pMachine = machine;  
+    pTransaction = new Transaction(pMachine->getProductMap());
+}
+MachineController::~MachineController() {
+    delete pTransaction;
 }
 void MachineController::executeAction() {
     switch (pMachine->getState()) {

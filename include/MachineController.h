@@ -7,9 +7,9 @@
 class MachineController {
     public:
         MachineController(UserInterface* interface, ScoMachine* machine);
+        ~MachineController();
         void executeAction();
         void exitAction();
-
         State getState() {
             return pMachine->getState();
         }
@@ -17,7 +17,6 @@ class MachineController {
         UserInterface* pInterface;
         ScoMachine* pMachine;
         Transaction* pTransaction;
-
         void resetAction();
         void scanAction();
         void paymentAction();

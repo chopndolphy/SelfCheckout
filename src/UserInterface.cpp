@@ -93,7 +93,7 @@ void UserInterface::displayWelcomeMessage(std::string art) {
 void UserInterface::displayScannedItems(std::vector<Product*> scannedProducts, double runningBalance) {
     system("clear");
     for (size_t i = 0; i < scannedProducts.size(); i++) {
-        std::cout << i+1 << " | " << scannedProducts.at(i)->getProductID() << " | " << scannedProducts.at(i)->getProductName() << " | $" << scannedProducts.at(i)->getProductPrice() << std::endl;
+        std::cout << i+1 << " | " << scannedProducts.at(i)->getProductID().append(13-scannedProducts.at(i)->getProductID().length(), ' ') << " | " << scannedProducts.at(i)->getProductName().append(35-scannedProducts.at(i)->getProductName().length(), ' ') << " | $" << scannedProducts.at(i)->getProductPrice() << std::endl;
         }
     std::cout << "\n(Type 'done' to finish scanning.                 Balance: $" << runningBalance << std::endl;
 }
@@ -118,7 +118,7 @@ void UserInterface::displayReciept(Transaction* aTransaction) {
     std::cout << "Chris' Gross Grocery Grove" << std::endl;
     std::cout << "\nItems purchased:" << std::endl;
     for (size_t i = 0; i < aTransaction->getScannedProducts().size(); i++) {
-        std::cout << aTransaction->getScannedProducts().at(i)->getProductID() << "   $" << aTransaction->getScannedProducts().at(i)->getProductPrice() << std::endl;;
+        std::cout << aTransaction->getScannedProducts().at(i)->getProductID().append(13-aTransaction->getScannedProducts().at(i)->getProductID().length(), ' ') << "   $" << aTransaction->getScannedProducts().at(i)->getProductPrice() << std::endl;
     }
     std::cout << "\nItem Balance:   $" << aTransaction->getRunningBalance() << std::endl;
     std::cout << "Tax Total:      $" << aTransaction->getFinalTax() << std::endl;

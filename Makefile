@@ -1,35 +1,71 @@
-CC=g++
-CFLAGS=-std=c++11 -pedantic -Wall -Wextra
+CXX=g++
+CXXFLAGS= -g -std=c++11 -pedantic -Wall -Wextra
 
+BIN=bin
 BUILD=build
+DOC=doc
+IDIR=include
+LIB=lib
+SPIKE=spike
+SRC=src
+TEST=test
 
-$(BUILD)/self_checkout:  $(BUILD)/self_checkout.o $(BUILD)/ScoMachine.o $(BUILD)/Transaction.o $(BUILD)/UserInterface.o $(BUILD)/MachineController.o $(BUILD)/Reader.o $(BUILD)/Product.o | $(BUILD)
-	$(CC) $(CFLAGS) -o $@ $(BUILD)/self_checkout.o $(BUILD)/UserInterface.o $(BUILD)/ScoMachine.o $(BUILD)/Transaction.o $(BUILD)/MachineController.o $(BUILD)/Reader.o $(BUILD)/Product.o
+override CXXFLAGS += $(IDIR:%=-I%)
 
-$(BUILD)/self_checkout.o:  self_checkout.cpp MachineController.h | $(BUILD)
-	$(CC) $(CFLAGS) -c self_checkout.cpp -o $(BUILD)/self_checkout.o
+CXX_SRCS = MachineController.cpp Product.cpp Reader.cpp ScoMachine.cpp Transaction.cpp UserInterface.cpp
+OBJS = $(CXX_SRCS:%.cpp=$(BUILD)/%.o)
+HEAD = $(CXX_SRCS:%.cpp=$(BUILD)/%.h)
 
-$(BUILD)/MachineController.o:  MachineController.cpp MachineController.h MachineState.h ScoMachine.h Transaction.h UserInterface.h | $(BUILD)
-	$(CC) $(CFLAGS) -c MachineController.cpp -o $(BUILD)/MachineController.o
+MAIN_DEPS = $(SRC)/self_checkout.cpp $(IDIR)/MachineController.h
 
-$(BUILD)/UserInterface.o:  UserInterface.cpp UserInterface.h Transaction.h Product.h | $(BUILD)
-	$(CC) $(CFLAGS) -c UserInterface.cpp -o $(BUILD)/UserInterface.o
+main: $(BIN)/self_checkout
 
-$(BUILD)/ScoMachine.o:  ScoMachine.cpp ScoMachine.h MachineState.h Product.h Reader.h | $(BUILD)
-	$(CC) $(CFLAGS) -c ScoMachine.cpp -o $(BUILD)/ScoMachine.o
+# Main executable
+$(BIN)/self_checkout: $(OBJS) $(BUILD)/self_checkout.o
+	echo $(OBJS) $(BUILD)/self_checkout.o
+	$(CXX) -o $@ $^
 
-$(BUILD)/Transaction.o:  Transaction.cpp Transaction.h Product.h | $(BUILD)
-	$(CC) $(CFLAGS) -c Transaction.cpp -o $(BUILD)/Transaction.o	
+#Test executable
+$(BIN)/$(EXE): $(OBJS) $(BUILD)/$(EXE).o
+	echo $(OBJS) $(BUILD)/$(EXE).o
+	$(CXX) -o $@ $^
+	
+#Test.o
+$(BUILD)/$(EXE).o: $(TEST)/$(EXE).cpp $(IDIR)/MachineController.h | $(BUILD)
+	$(CXX) $(CXXFLAGS) -c $(TEST)/$(EXE).cpp -o $@
 
-$(BUILD)/Product.o:  Product.cpp Product.h | $(BUILD)
-	$(CC) $(CFLAGS) -c Product.cpp -o $(BUILD)/Product.o	
+# Main.o
+$(BUILD)/self_checkout.o: $(MAIN_DEPS) | $(BUILD)
+	$(CXX) $(CXXFLAGS) -c $(patsubst $(BUILD)/%.o,$(SRC)/%.cpp,$@) -o $@
 
-$(BUILD)/Reader.o:  Reader.cpp Reader.h Product.h| $(BUILD)
-	$(CC) $(CFLAGS) -c Reader.cpp -o $(BUILD)/Reader.o	
+# All .o files
+$(BUILD)/%.o: $(SRC)/%.cpp $(IDIR)/%.h | $(BUILD)
+	$(CXX) $(CXXFLAGS) -c $(patsubst $(BUILD)/%.o,$(SRC)/%.cpp,$@) -o $@
+
+# Depends on UserInterface.h
+$(BUILD)/MachineController.o: $(IDIR)/UserInterface.h | $(BUILD)
+
+# Depends on ScoMachine.h
+$(BUILD)/MachineController.o: $(IDIR)/ScoMachine.h | $(BUILD)
+
+# Depends on Transaction.h
+$(BUILD)/MachineController.o $(BUILD)/UserInterface.o: $(IDIR)/Transaction.h | $(BUILD)
+
+# Depends on Product.h
+$(BUILD)/Transaction.o $(BUILD)/ScoMachine.o $(BUILD)/UserInterface.o: $(IDIR)/Product.h | $(BUILD)
+
+# Depends on Reader.h
+$(BUILD)/ScoMachine.o: $(IDIR)/Reader.h | $(BUILD)
+
+# Depends on MachineState.h
+$(BUILD)/MachineController.o $(BUILD)/ScoMachine.o: $(IDIR)/Transaction.h | $(BUILD)
 
 $(BUILD):
-	mkdir $(BUILD)
+	mkdir -p $(BUILD)
 
-.phony: clean
+.phony: clean test
+
 clean:
 	rm -rf $(BUILD)
+
+test: $(BIN)/$(EXE)
