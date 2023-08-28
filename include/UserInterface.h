@@ -15,7 +15,7 @@ class UserInterface {
         std::vector<std::string> availableBarcodes;
     
     public:
-        UserInterface (std::map<std::string, Product*> productMap);
+        UserInterface (std::vector<Product>* productList);
         std::string readBarcode();
         bool askIfPayingCash();
         bool askIfRecieptNeeded();

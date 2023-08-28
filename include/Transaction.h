@@ -7,7 +7,7 @@
 #include "Product.h"
 class Transaction {
     public:
-        Transaction(std::map<std::string, Product*> productList);
+        Transaction(std::map<std::string, int>* productMap, std::vector<Product>* productList);
         void scanItem(std::string barcode);
         void calculateChange(double cashPayed);
         void calculateBalances();
@@ -57,5 +57,6 @@ class Transaction {
         int creditApprovalCode {0};
         std::vector<Product*> scannedProducts;
         bool scanning {1};
-        std::map<std::string, Product*> transactionProductMap;
+        std::map<std::string, int>* transactionProductMap;
+        std::vector<Product>* transactionProductList;
 };

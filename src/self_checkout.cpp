@@ -2,7 +2,7 @@
 
 int main() {
     ScoMachine s;
-    UserInterface i(s.getProductMap());
+    UserInterface i(s.getProductsVec());
     MachineController controller(&i, &s);
 
     while (controller.getState() != State::Exit) {

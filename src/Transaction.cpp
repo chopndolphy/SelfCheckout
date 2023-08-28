@@ -2,18 +2,19 @@
 
 const double Transaction::taxRate {.05};
 
-Transaction::Transaction(std::map<std::string, Product*> productMap) {
+Transaction::Transaction(std::map<std::string, int>* productMap, std::vector<Product>* productList) {
     scanning = 1;
     runningBalance = 0.0;
     transactionProductMap = productMap;
+    transactionProductList = productList;
 }
 void Transaction::scanItem(std::string barcode) {
     if (barcode == "done") {
         scanning = 0;
         return;
     }
-    scannedProducts.push_back(transactionProductMap.at(barcode));
-    runningBalance += stod(scannedProducts.back()->getProductPrice());
+    scannedProducts.push_back(&transactionProductList->at(transactionProductMap->at(barcode)));
+    runningBalance += scannedProducts.back()->getProductPrice();
 }
 void Transaction::calculateBalances() {
     runningBalancePennies = runningBalance * 100;

@@ -1,8 +1,8 @@
 #include "UserInterface.h"
 
-UserInterface::UserInterface(std::map<std::string, Product*> productMap) {
-    for (auto const& product : productMap) {
-        availableBarcodes.push_back(product.first);
+UserInterface::UserInterface(std::vector<Product>* productList) {
+    for (auto product : *productList) {
+        availableBarcodes.push_back(product.getProductID());
     }
     availableBarcodes.push_back("done");
 }

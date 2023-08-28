@@ -3,7 +3,7 @@
 MachineController::MachineController(UserInterface* interface, ScoMachine* machine) {
     pInterface = interface;
     pMachine = machine;  
-    pTransaction = new Transaction(pMachine->getProductMap());
+    pTransaction = new Transaction(pMachine->getProductMap(), pMachine->getProductsVec());
 }
 MachineController::~MachineController() {
     delete pTransaction;

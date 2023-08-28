@@ -10,7 +10,7 @@ class ScoMachine {
         void resetMachine();
         void updateMachine(double cashInserted, double changeGiven, double finalBill);
         void advanceState();
-        std::map<std::string, Product*> loadProductMap(std::string fileName);
+        std::map<std::string, int> loadProductMap(std::string fileName, std::vector<Product>* products);
         std::string loadLogoArt(std::string fileName);
         State getState() {
             return machineState;
@@ -30,8 +30,11 @@ class ScoMachine {
         std::string getLogoArt() {
             return logoArt;
         }
-        std::map<std::string, Product*> getProductMap() {
-            return machineProductMap;
+        std::map<std::string, int>* getProductMap() {
+            return &machineProductMap;
+        }
+        std::vector<Product>* getProductsVec() {
+            return &productsVec;
         }
     public:
         const static double changeRefillAmount;
@@ -43,7 +46,8 @@ class ScoMachine {
         double dayIncome {0};
         std::string logoArt;
         State machineState;
-        std::map<std::string, Product*> machineProductMap;
+        std::map<std::string, int> machineProductMap;
+        std::vector<Product> productsVec;
         std::map<State, State> stateTransitions = {
         {State::Reset, State::Scan},
         {State::Scan, State::Payment},

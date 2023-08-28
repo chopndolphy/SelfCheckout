@@ -5,7 +5,7 @@ const double ScoMachine::changeEmptiedAmount {50};
 
 ScoMachine::ScoMachine() {
     machineState = State::Reset;
-    machineProductMap = loadProductMap("CSV_Files/product_list.csv");
+    machineProductMap = loadProductMap("CSV_Files/product_list.csv", &productsVec);
     logoArt = loadLogoArt("CSV_Files/logo_art.csv");
 }
 void ScoMachine::resetMachine() {
@@ -30,13 +30,13 @@ void ScoMachine::updateMachine(double cashInserted, double changeGiven, double f
 void ScoMachine::advanceState() {
     machineState = stateTransitions[machineState];
 }
-std::map<std::string, Product*> ScoMachine::loadProductMap(std::string fileName) {
+std::map<std::string, int> ScoMachine::loadProductMap(std::string fileName, std::vector<Product>* products) {
     std::vector<std::vector<std::string>> productMapFile = Reader::readCSV(fileName);
-    std::vector<Product> products;
-    std::map<std::string, Product*> productMap;
+    products->reserve(productMapFile.size());
+    std::map<std::string, int> productMap;
     for (size_t i = 0; i < productMapFile.size(); i++) {
-        products.emplace_back(productMapFile.at(i).at(0), productMapFile.at(i).at(1), productMapFile.at(i).at(2));
-        productMap.emplace(products.at(i).getProductID(), &products.back());
+        products->emplace_back(productMapFile.at(i).at(0), productMapFile.at(i).at(1), stod(productMapFile.at(i).at(2)));
+        productMap.emplace(products->at(i).getProductID(), i);
     }
     return productMap;
 }
