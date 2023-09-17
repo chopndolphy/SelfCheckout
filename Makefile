@@ -21,7 +21,7 @@ MAIN_DEPS = $(SRC)/self_checkout.cpp $(IDIR)/MachineController.h
 main: $(BIN)/self_checkout
 
 # Main executable
-$(BIN)/self_checkout: $(OBJS) $(BUILD)/self_checkout.o
+$(BIN)/self_checkout: $(OBJS) $(BUILD)/self_checkout.o | $(BIN)
 	$(CXX) -o $@ $^
 
 # Main.o
@@ -29,7 +29,7 @@ $(BUILD)/self_checkout.o: $(MAIN_DEPS) | $(BUILD)
 	$(CXX) $(CXXFLAGS) -c $(patsubst $(BUILD)/%.o,$(SRC)/%.cpp,$@) -o $@
 
 #Test executable
-$(BIN)/$(T): $(OBJS) $(BUILD)/$(T).o
+$(BIN)/$(T): $(OBJS) $(BUILD)/$(T).o | $(BIN)
 	$(CXX) -o $@ $^
 
 #Test.o
@@ -37,7 +37,7 @@ $(BUILD)/$(T).o: $(TEST)/$(T).cpp $(IDIR)/MachineController.h | $(BUILD)
 	$(CXX) $(CXXFLAGS) -c $(TEST)/$(T).cpp -o $@
 
 #Spike executable
-$(SPIKE)/$(S).out: $(SPIKE)/$(S).cpp
+$(SPIKE)/$(S).out: $(SPIKE)/$(S).cpp | $(BIN)
 	$(CXX) -g $^ -o $@
 
 # All .o files
@@ -64,6 +64,9 @@ $(BUILD)/MachineController.o $(BUILD)/ScoMachine.o: $(IDIR)/Transaction.h | $(BU
 
 $(BUILD):
 	mkdir -p $(BUILD)
+
+$(BIN):
+	mkdir -p $(BIN)
 
 .phony: clean test spike
 
