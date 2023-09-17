@@ -2,14 +2,14 @@
 #include <string>
 class Product {
     public:
-        Product(std::string id, std::string name, double price);
-        std::string getProductID() {
+        Product(const std::string &id, const std::string &name, const double &price);
+        const std::string& getProductID() const {
             return productID;
         }
-        std::string getProductName() {
+        const std::string& getProductName() const {
             return productName;
         }
-        double getProductPrice() {
+        const double& getProductPrice() const {
             return productPrice;
         }
     private:

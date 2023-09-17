@@ -1,6 +1,8 @@
 # SelfCheckout
 Version 1.8.28
 ## Changelog
+### 1.9.17
+- Refactored to optimize for encapsulation.
 ### 1.8.28
 - Fixed issue of clearing the productMap, when constructing a new product, which also fixed the stod bug.
 - Expanded Makefile for spike tests.

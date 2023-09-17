@@ -10,7 +10,7 @@ class MachineController {
         ~MachineController();
         void executeAction();
         void exitAction();
-        State getState() {
+        const State& getState() const {
             return pMachine->getState();
         }
     private:

@@ -3,7 +3,7 @@
 MachineController::MachineController(UserInterface* interface, ScoMachine* machine) {
     pInterface = interface;
     pMachine = machine;  
-    pTransaction = new Transaction(pMachine->getProductMap(), pMachine->getProductsVec());
+    pTransaction = new Transaction;
 }
 MachineController::~MachineController() {
     delete pTransaction;
@@ -32,27 +32,39 @@ void MachineController::resetAction() {
 }
 void MachineController::scanAction() {
     while(pTransaction->isScanning()) {
-        pTransaction->scanItem(pInterface->readBarcode());
+        while(!pMachine->setCurrentBarcode(pInterface->readBarcode())) {
+            pInterface->displayInputError();
+        }
+        if (pMachine->getCurrentBarcode() == "done") {
+            pTransaction->setScanning(false);
+            return;
+        }
+        pTransaction->addItem(pMachine->getItem(pMachine->getCurrentBarcode()));
         pInterface->displayScannedItems(pTransaction->getScannedProducts(), pTransaction->getRunningBalance());
     }
 }
 void MachineController::paymentAction() {
-    pTransaction->calculateBalances();
+    pTransaction->setFinalTax(pMachine->calculateTax(pTransaction->getRunningBalance()));
+    pTransaction->setFinalBill(pMachine->calculateFinalBill(pTransaction->getRunningBalance()));
     pInterface->displayBalances(pTransaction->getFinalTax(), pTransaction->getFinalBill());
     if (pInterface->askIfPayingCash()) {
-        pTransaction->calculateChange(pInterface->insertCash());
-        pInterface->displayChange(pTransaction->getTransactionCashPayed(), pTransaction->getChangeOwed(), pTransaction->getTransactionChangeQuantities());
+        pTransaction->setCashPayed(pInterface->insertCash());
+        pTransaction->setChangeOwed(pTransaction->getCashPayed() - pTransaction->getFinalBill());
+        pTransaction->setChangeQuantities(pMachine->calculateChange(pTransaction->getChangeOwed()));
+        pInterface->displayChange(pTransaction->getCashPayed(), pTransaction->getChangeOwed(), pTransaction->getChangeQuantities());
     } else {
-        pTransaction->approveCredit();
+        pTransaction->setCreditApprovalCode(pMachine->approveCredit());
         pInterface->displayCreditApproval(pTransaction->getCreditApprovalCode());
     }
     if (pInterface->askIfRecieptNeeded()) {
-        pInterface->displayReciept(pTransaction);
+        pInterface->displayReciept(*pTransaction);
     }
-    pMachine->updateMachine(pTransaction->getTransactionCashPayed(), pTransaction->getChangeOwed(), pTransaction->getFinalBill());
+    pMachine->updateMachine(pTransaction->getCashPayed(), pTransaction->getChangeOwed(), pTransaction->getFinalBill());
+    pInterface->askIfMoreCustomers();
 }
 void MachineController::resultsAction() {
     pInterface->displayDayResults(pMachine->getChangeRepoBalance(), pMachine->getCashPurchaseRepoBalance(), pMachine->getDayIncome(), pMachine->getTotalIncome());
+    pInterface->askIfNewDay();
 }
 void MachineController::exitAction() {
     pInterface->displayGoodbye();

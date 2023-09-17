@@ -1,7 +1,6 @@
 #include "Reader.h"
 
-std::vector<std::vector<std::string>> Reader::readCSV(std::string fileName) {
-    std::vector<std::vector<std::string>> content;
+ void Reader::readCSV(const std::string &fileName, std::vector<std::vector<std::string>> &container) {
     std::vector<std::string> row;
     std::string line, word;
     std::fstream file (fileName, std::ios::in);
@@ -12,10 +11,9 @@ std::vector<std::vector<std::string>> Reader::readCSV(std::string fileName) {
             while(getline(str, word, ',')) {
                 row.push_back(word);
             }
-            content.push_back(row);
+            container.push_back(row);
         }
     } else {
         std::cout << "Could not open the file" << std::endl;
     }
-    return content;
 }

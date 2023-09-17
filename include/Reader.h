@@ -7,5 +7,5 @@
 
 class Reader {
     public:
-        static std::vector<std::vector<std::string>> readCSV(std::string fileName);
+        static void readCSV(const std::string &fileName, std::vector<std::vector<std::string>> &container);
 };

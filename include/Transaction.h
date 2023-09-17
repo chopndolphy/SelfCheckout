@@ -1,62 +1,66 @@
 #pragma once
-#include <string>
 #include <vector>
-#include <algorithm>
-#include <cmath>
-#include <map>
 #include "Product.h"
 class Transaction {
     public:
-        Transaction(std::map<std::string, int>* productMap, std::vector<Product>* productList);
-        void scanItem(std::string barcode);
-        void calculateChange(double cashPayed);
-        void calculateBalances();
-        void approveCredit();
-        
-        double getFinalBill(){
-            return finalBill;
+        Transaction();
+        void addItem(const Product &product);
+        void setScanning(const bool &scanValue) {
+            scanning = scanValue;
         }
-        bool isScanning() {
+        void setFinalTax(const double &tax) {
+            finalTax = tax;
+        }
+        void setFinalBill(const double &bill){
+            finalBill = bill;
+        }
+        void setCashPayed(const double &cashInserted) {
+            cashPayed = cashInserted;
+        }
+        void setChangeOwed(const double &change) {
+            changeOwed = change;
+        }
+        void setChangeQuantities(const std::vector<int> &changeVec) {
+            changeQuantities = changeVec;
+        }
+        void setCreditApprovalCode(const int &approvalCode) {
+            creditApprovalCode = approvalCode;
+        }
+        const bool& isScanning() const {
             return scanning;
         }
-        std::vector<Product*> getScannedProducts() {
-            return scannedProducts;
-        }
-        double getRunningBalance() {
-            return runningBalance;
-        }
-        double getFinalTax() {
+        const double& getFinalTax() const {
             return finalTax;
         }
-        double getTransactionCashPayed() {
-            return transactionCashPayed;
+        const double& getFinalBill() const {
+            return finalBill;
         }
-        double getChangeOwed() {
+        const double& getCashPayed() const {
+            return cashPayed;
+        }
+        const double& getChangeOwed() const {
             return changeOwed;
         }
-        int getCreditApprovalCode() {
+        const std::vector<int>& getChangeQuantities() const {
+            return changeQuantities;
+        }
+        const int& getCreditApprovalCode() const {
             return creditApprovalCode;
         }
-        std::vector<int> getTransactionChangeQuantities() {
-            return transactionChangeQuantities;
+        const std::vector<Product>& getScannedProducts() const {
+            return scannedProducts;
         }
-
-    public:
-        const static double taxRate;
-
+        const double& getRunningBalance() const {
+            return runningBalance;
+        }
     private:
+        std::vector<Product> scannedProducts;
+        std::vector<int> changeQuantities;
+        bool scanning {1};
         double runningBalance {0};
-        int centsRemaining {0};
-        double transactionCashPayed {0};
-        double changeOwed {0};
         double finalTax {0};
         double finalBill {0};
-        int runningBalancePennies {0};
-        int finalTaxPennies {0};
-        std::vector<int> transactionChangeQuantities;
+        double cashPayed {0};
+        double changeOwed {0};
         int creditApprovalCode {0};
-        std::vector<Product*> scannedProducts;
-        bool scanning {1};
-        std::map<std::string, int>* transactionProductMap;
-        std::vector<Product>* transactionProductList;
 };

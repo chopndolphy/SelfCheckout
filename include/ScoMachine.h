@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <map>
+#include <algorithm>
+#include <cmath>
 #include "MachineState.h"
 #include "Product.h"
 #include "Reader.h"
@@ -8,46 +10,54 @@ class ScoMachine {
     public:
         ScoMachine ();
         void resetMachine();
-        void updateMachine(double cashInserted, double changeGiven, double finalBill);
+        void updateMachine(const double &cashInserted, const double &changeGiven, const double &finalBill);
         void advanceState();
-        std::map<std::string, int> loadProductMap(std::string fileName, std::vector<Product>* products);
-        std::string loadLogoArt(std::string fileName);
-        State getState() {
+        void loadProductMap(const std::string &fileName, std::map<std::string, Product> &productMap);
+        void loadLogoArt(const std::string &fileName, std::string &logoString);
+        double calculateChangeOwed(const double &cashPayed, const double &finalBill);
+        std::vector<int> calculateChange(const double &changeOwed);
+        double calculateTax(const double &runningBalance);
+        double calculateFinalBill(const double &runningBalance);
+        int approveCredit();
+        bool setCurrentBarcode(const std::string &barcode);
+        Product getItem(const std::string &barcode);
+        const State& getState() const {
             return machineState;
         }
-        double getTotalIncome() {
+        const double& getTotalIncome() const {
             return totalIncome;
         }
-        double getChangeRepoBalance() {
+        const double& getChangeRepoBalance() const {
             return changeRepoBalance;
         }
-        double getCashPurchaseRepoBalance() {
+        const double& getCashPurchaseRepoBalance() const {
             return cashPurchaseRepoBalance;
         }
-        double getDayIncome() {
+        const double& getDayIncome() const {
             return dayIncome;
         }
-        std::string getLogoArt() {
+        const std::string& getLogoArt() const {
             return logoArt;
         }
-        std::map<std::string, int>* getProductMap() {
-            return &machineProductMap;
+        const std::map<std::string, Product>& getProductMap() const {
+            return machineProductMap;
         }
-        std::vector<Product>* getProductsVec() {
-            return &productsVec;
+        const std::string& getCurrentBarcode() const {
+            return currentBarcode;
         }
     public:
         const static double changeRefillAmount;
         const static double changeEmptiedAmount;
+        const static double taxRate;
     private:
         double totalIncome {0};
         double changeRepoBalance {changeRefillAmount};
         double cashPurchaseRepoBalance {0};
         double dayIncome {0};
+        std::string currentBarcode;
         std::string logoArt;
         State machineState;
-        std::map<std::string, int> machineProductMap;
-        std::vector<Product> productsVec;
+        std::map<std::string, Product> machineProductMap;
         std::map<State, State> stateTransitions = {
         {State::Reset, State::Scan},
         {State::Scan, State::Payment},

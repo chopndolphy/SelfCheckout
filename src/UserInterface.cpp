@@ -1,32 +1,21 @@
 #include "UserInterface.h"
 
-UserInterface::UserInterface(std::vector<Product>* productList) {
-    for (auto product : *productList) {
-        availableBarcodes.push_back(product.getProductID());
-    }
-    availableBarcodes.push_back("done");
-}
 std::string UserInterface::readBarcode() {
-    std::string barcodeString;
-    while (1) {
-        std::cin >> barcodeString;
-        if (std::find(std::begin(availableBarcodes), std::end(availableBarcodes), barcodeString) != std::end(availableBarcodes)) {
-            return barcodeString;
-        } else {
-            std::cout << "Invalid input. Try again." << std::endl;
-        }
-    }
+    std::string currentBarcode;
+    std::cin >> currentBarcode;
+    return currentBarcode;
 }
 bool UserInterface::askIfPayingCash() {
+    std::string paymentType;
     std::cout << "\nHow would you like to pay? (cash/card) ";
-    while (1) {
+    while (true) {
         std::cin >> paymentType;
         if (paymentType == "cash") {
-            return 1;
+            return true;
         } else if (paymentType == "card") {
-            return 0;
+            return false;
         } else {
-            std::cout << "Invalide input. Try again." << std::endl;
+            std::cout << "Invalid input. Try again." << std::endl;
         }
     }
 }
@@ -59,14 +48,13 @@ bool UserInterface::askIfMoreCustomers() {
     }
 }
  double UserInterface::insertCash() {
+    double cashInserted;
     std::cout << "Please insert your payment: $";
     while (1) {
         if (std::cin >> cashInserted) {
             return cashInserted;
         } else {
             std::cout << "Invalid input. Try again." << std::endl;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
     }
 }
@@ -84,24 +72,26 @@ bool UserInterface::askIfNewDay() {
         }
     }
 }
-void UserInterface::displayWelcomeMessage(std::string art) {
+void UserInterface::displayWelcomeMessage(const std::string &art) {
     system("clear");
     std::cout << "Welcome to Self-Checkout at Chris' Gross Grocery Grove!" << std::endl;
     std::cout << art << std::endl;
     std::cout << "\nEnter barcode number to begin scanning" << std::endl;
 }
-void UserInterface::displayScannedItems(std::vector<Product*> scannedProducts, double runningBalance) {
+void UserInterface::displayScannedItems(const std::vector<Product> &scannedProducts, const double &runningBalance) {
     system("clear");
     for (size_t i = 0; i < scannedProducts.size(); i++) {
-        std::cout << i+1 << " | " << scannedProducts.at(i)->getProductID().append(13-scannedProducts.at(i)->getProductID().length(), ' ') << " | " << scannedProducts.at(i)->getProductName().append(35-scannedProducts.at(i)->getProductName().length(), ' ') << " | $" << scannedProducts.at(i)->getProductPrice() << std::endl;
+        std::string fillerSpace1;
+        std::string fillerSpace2;
+        std::cout << i+1 << " | " << scannedProducts.at(i).getProductID() << fillerSpace1.append(13-scannedProducts.at(i).getProductID().length(), ' ') << " | " << scannedProducts.at(i).getProductName() << fillerSpace2.append(35-scannedProducts.at(i).getProductName().length(), ' ') << " | $" << scannedProducts.at(i).getProductPrice() << std::endl;
         }
     std::cout << "\n(Type 'done' to finish scanning.                 Balance: $" << runningBalance << std::endl;
 }
-void UserInterface::displayBalances(double finalTax, double finalBill) {
+void UserInterface::displayBalances(const double &finalTax, const double &finalBill) {
     std::cout << "\n                                                     Tax: $" << finalTax << std::endl;
     std::cout << "\n                                              Final Bill: $" << finalBill << std::endl;
 }
-void UserInterface::displayChange(double cash, double totalChange, std::vector<int> changeQuantities) {
+void UserInterface::displayChange(const double &cash, const double &totalChange, const std::vector<int> &changeQuantities) {
     std::cout << "\nYou inserted: $" << cash << std::endl;
     std::cout << "Your change: $" << totalChange << std::endl;
     std::cout << "Dollars: " << changeQuantities.at(0) << std::endl;
@@ -110,28 +100,29 @@ void UserInterface::displayChange(double cash, double totalChange, std::vector<i
     std::cout << "Nickels: " << changeQuantities.at(3) << std::endl;
     std::cout << "Pennies: " << changeQuantities.at(4) << std::endl;
 }
-void UserInterface::displayCreditApproval(int creditApprovalCode) {
+void UserInterface::displayCreditApproval(const int &creditApprovalCode) {
     std::cout << "Your purchase was successful! (verification code: " << creditApprovalCode << ")" << std::endl;
 }
-void UserInterface::displayReciept(Transaction* aTransaction) {
+void UserInterface::displayReciept(const Transaction &aTransaction) {
     system("clear");
     std::cout << "Chris' Gross Grocery Grove" << std::endl;
     std::cout << "\nItems purchased:" << std::endl;
-    for (size_t i = 0; i < aTransaction->getScannedProducts().size(); i++) {
-        std::cout << aTransaction->getScannedProducts().at(i)->getProductID().append(13-aTransaction->getScannedProducts().at(i)->getProductID().length(), ' ') << "   $" << aTransaction->getScannedProducts().at(i)->getProductPrice() << std::endl;
+    for (size_t i = 0; i < aTransaction.getScannedProducts().size(); i++) {
+        std::string fillerSpace;
+        std::cout << aTransaction.getScannedProducts().at(i).getProductID() << fillerSpace.append(13-aTransaction.getScannedProducts().at(i).getProductID().length(), ' ') << "   $" << aTransaction.getScannedProducts().at(i).getProductPrice() << std::endl;
     }
-    std::cout << "\nItem Balance:   $" << aTransaction->getRunningBalance() << std::endl;
-    std::cout << "Tax Total:      $" << aTransaction->getFinalTax() << std::endl;
-    std::cout << "Final Bill:     $" << aTransaction->getFinalBill() << std::endl;
-    if (paymentType == "card") {
-        std::cout << "\nCard verification code: " << aTransaction->getCreditApprovalCode() << std::endl;
+    std::cout << "\nItem Balance:   $" << aTransaction.getRunningBalance() << std::endl;
+    std::cout << "Tax Total:      $" << aTransaction.getFinalTax() << std::endl;
+    std::cout << "Final Bill:     $" << aTransaction.getFinalBill() << std::endl;
+    if (aTransaction.getCreditApprovalCode() > 0) {
+        std::cout << "\nCard verification code: " << aTransaction.getCreditApprovalCode() << std::endl;
     } else {
-        std::cout << "Cash inserted:  $" << aTransaction->getTransactionCashPayed() << std::endl;
-        std::cout << "Change:         $" << aTransaction->getChangeOwed() << std::endl;
+        std::cout << "Cash inserted:  $" << aTransaction.getCashPayed() << std::endl;
+        std::cout << "Change:         $" << aTransaction.getChangeOwed() << std::endl;
     }
     std::cout << "\nThank you for shopping!" << std::endl;
 }
-void UserInterface::displayDayResults(double changeLeft, double cashBalance, double dayIncome, double totalIncome) {
+void UserInterface::displayDayResults(const double &changeLeft, const double &cashBalance, const double &dayIncome, const double &totalIncome) {
     system("clear");
     std::cout << "End of day results:" << std::endl;
     std::cout << "\nChange Repository Balance:        $" << changeLeft << std::endl;
@@ -140,5 +131,8 @@ void UserInterface::displayDayResults(double changeLeft, double cashBalance, dou
     std::cout << "Total Income:                     $" << totalIncome << std::endl;
 }
 void UserInterface::displayGoodbye() {
-            std::cout << "\nGoodbye!" << std::endl;
+    std::cout << "\nGoodbye!" << std::endl;
+}
+void UserInterface::displayInputError() {
+    std::cout << "Invalid input. Try again." << std::endl;
 }
