@@ -16,7 +16,7 @@ CXX_SRCS = MachineController.cpp Product.cpp Reader.cpp ScoMachine.cpp Transacti
 OBJS = $(CXX_SRCS:%.cpp=$(BUILD)/%.o)
 HEAD = $(CXX_SRCS:%.cpp=$(BUILD)/%.h)
 
-MAIN_DEPS = $(SRC)/self_checkout.cpp $(IDIR)/MachineController.h
+MAIN_DEPS = $(SRC)/self_checkout.cpp $(IDIR)/MachineController.h $(IDIR)/UserInterface.h $(IDIR)/ScoMachine.h $(IDIR)/MachineState.h
 
 main: $(BIN)/self_checkout
 

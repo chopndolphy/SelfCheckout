@@ -1,4 +1,7 @@
 #include "MachineController.h"
+#include "ScoMachine.h"
+#include "UserInterface.h"
+#include "MachineState.h"
 
 int main() {
     ScoMachine s;
