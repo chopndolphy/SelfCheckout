@@ -10,8 +10,8 @@ class MachineController {
         ~MachineController();
         void executeAction();
         void exitAction();
-        const State& getState() const {
-            return pMachine->getState();
+        MachineState* getState() const {
+            return pMachine->getCurrentState();
         }
     private:
         UserInterface* pInterface;

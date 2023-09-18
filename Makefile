@@ -12,7 +12,7 @@ TEST=test
 
 override CXXFLAGS += $(IDIR:%=-I%)
 
-CXX_SRCS = MachineController.cpp Product.cpp Reader.cpp ScoMachine.cpp Transaction.cpp UserInterface.cpp
+CXX_SRCS = MachineController.cpp Product.cpp Reader.cpp ScoMachine.cpp Transaction.cpp UserInterface.cpp ConcreteMachineStates.cpp
 OBJS = $(CXX_SRCS:%.cpp=$(BUILD)/%.o)
 HEAD = $(CXX_SRCS:%.cpp=$(BUILD)/%.h)
 
@@ -48,7 +48,7 @@ $(BUILD)/%.o: $(SRC)/%.cpp $(IDIR)/%.h | $(BUILD)
 $(BUILD)/MachineController.o: $(IDIR)/UserInterface.h | $(BUILD)
 
 # Depends on ScoMachine.h
-$(BUILD)/MachineController.o: $(IDIR)/ScoMachine.h | $(BUILD)
+$(BUILD)/MachineController.o $(BUILD)/ConcreteMachineStates.o: $(IDIR)/ScoMachine.h | $(BUILD)
 
 # Depends on Transaction.h
 $(BUILD)/MachineController.o $(BUILD)/UserInterface.o: $(IDIR)/Transaction.h | $(BUILD)
@@ -60,7 +60,11 @@ $(BUILD)/Transaction.o $(BUILD)/ScoMachine.o $(BUILD)/UserInterface.o: $(IDIR)/P
 $(BUILD)/ScoMachine.o: $(IDIR)/Reader.h | $(BUILD)
 
 # Depends on MachineState.h
-$(BUILD)/MachineController.o $(BUILD)/ScoMachine.o: $(IDIR)/Transaction.h | $(BUILD)
+$(BUILD)/MachineController.o $(BUILD)/ScoMachine.o $(BUILD)/ConcreteMachineStates.o: $(IDIR)/MachineState.h | $(BUILD)
+
+# Depends on ConcreteMachineStates.h
+$(BUILD)/ScoMachine.o: $(IDIR)/ConcreteMachineStates.h | $(BUILD)
+
 
 $(BUILD):
 	mkdir -p $(BUILD)

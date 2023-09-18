@@ -6,12 +6,13 @@
 #include "MachineState.h"
 #include "Product.h"
 #include "Reader.h"
+#include "ConcreteMachineStates.h"
 class ScoMachine {
     public:
         ScoMachine ();
         void resetMachine();
         void updateMachine(const double &cashInserted, const double &changeGiven, const double &finalBill);
-        void advanceState();
+        void setState(MachineState& newState);
         void loadProductMap(const std::string &fileName, std::map<std::string, Product> &productMap);
         void loadLogoArt(const std::string &fileName, std::string &logoString);
         double calculateChangeOwed(const double &cashPayed, const double &finalBill);
@@ -19,10 +20,11 @@ class ScoMachine {
         double calculateTax(const double &runningBalance);
         double calculateFinalBill(const double &runningBalance);
         int approveCredit();
+        void toggle();
         bool setCurrentBarcode(const std::string &barcode);
         Product getItem(const std::string &barcode);
-        const State& getState() const {
-            return machineState;
+        MachineState* getCurrentState() const {
+            return currentState;
         }
         const double& getTotalIncome() const {
             return totalIncome;
@@ -56,12 +58,7 @@ class ScoMachine {
         double dayIncome {0};
         std::string currentBarcode;
         std::string logoArt;
-        State machineState;
+        MachineState* currentState;
         std::map<std::string, Product> machineProductMap;
-        std::map<State, State> stateTransitions = {
-        {State::Reset, State::Scan},
-        {State::Scan, State::Payment},
-        {State::Payment, State::Results},
-        {State::Results, State::Exit}
-        };
+     
 };

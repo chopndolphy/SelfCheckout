@@ -8,9 +8,7 @@ int main() {
     UserInterface i;
     MachineController controller(&i, &s);
 
-    while (controller.getState() != State::Exit) {
-        controller.executeAction();
-    }
+    controller.executeAction();
     controller.exitAction();
     return 0;
 }

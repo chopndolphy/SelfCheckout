@@ -9,26 +9,12 @@ MachineController::~MachineController() {
     delete pTransaction;
 }
 void MachineController::executeAction() {
-    switch (pMachine->getState()) {
-        case State::Reset:
-            resetAction();
-            break;
-        case State::Scan:
-            scanAction();
-            break;
-        case State::Payment:
-            paymentAction();
-            break;
-        case State::Results:
-            resultsAction();
-        default:
-            break;
-    }
-    pMachine->advanceState();
+    resetAction();
 }
 void MachineController::resetAction() {
     pMachine->resetMachine();
     pInterface->displayWelcomeMessage(pMachine->getLogoArt());
+    pMachine->toggle();
 }
 void MachineController::scanAction() {
     while(pTransaction->isScanning()) {
@@ -42,6 +28,7 @@ void MachineController::scanAction() {
         pTransaction->addItem(pMachine->getItem(pMachine->getCurrentBarcode()));
         pInterface->displayScannedItems(pTransaction->getScannedProducts(), pTransaction->getRunningBalance());
     }
+    pMachine->toggle();
 }
 void MachineController::paymentAction() {
     pTransaction->setFinalTax(pMachine->calculateTax(pTransaction->getRunningBalance()));
@@ -61,10 +48,12 @@ void MachineController::paymentAction() {
     }
     pMachine->updateMachine(pTransaction->getCashPayed(), pTransaction->getChangeOwed(), pTransaction->getFinalBill());
     pInterface->askIfMoreCustomers();
+    pMachine->toggle();
 }
 void MachineController::resultsAction() {
     pInterface->displayDayResults(pMachine->getChangeRepoBalance(), pMachine->getCashPurchaseRepoBalance(), pMachine->getDayIncome(), pMachine->getTotalIncome());
     pInterface->askIfNewDay();
+    pMachine->toggle();
 }
 void MachineController::exitAction() {
     pInterface->displayGoodbye();

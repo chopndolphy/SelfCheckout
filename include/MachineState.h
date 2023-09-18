@@ -1,10 +1,11 @@
 #pragma once
-#include <map>
+#include "ScoMachine.h"
 
-enum class State {
-    Reset = 1,
-    Scan = 2,
-    Payment = 3,
-    Results = 4,
-    Exit = 5
+class ScoMachine;
+class MachineState {
+    public:
+        virtual void enter(ScoMachine* machine) = 0;
+        virtual void toggle(ScoMachine* machine) = 0;
+        virtual void exit(ScoMachine* machine) = 0;
+        virtual ~MachineState() {}
 };
