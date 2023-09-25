@@ -8,7 +8,8 @@ int main() {
     UserInterface i;
     MachineController controller(&i, &s);
 
-    controller.executeAction();
-    controller.exitAction();
+    while (controller.getCurrentState() != &Exit::getInstance()) {
+        controller.toggle();
+    }
     return 0;
 }

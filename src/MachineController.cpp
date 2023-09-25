@@ -1,34 +1,35 @@
 #include "MachineController.h"
 
 MachineController::MachineController(UserInterface* interface, ScoMachine* machine) {
+    currentState = &Reset::getInstance();
     pInterface = interface;
-    pMachine = machine;  
-    pTransaction = new Transaction;
+    pMachine = machine;
+    pTransaction = nullptr;
 }
 MachineController::~MachineController() {
-    delete pTransaction;
 }
-void MachineController::executeAction() {
-    resetAction();
+void MachineController::setState(MachineState& newState) {
+    currentState->exit(this);
+    currentState = &newState;
+    currentState->enter(this);
+}
+void MachineController::toggle() {
+    currentState->toggle(this);
 }
 void MachineController::resetAction() {
     pMachine->resetMachine();
     pInterface->displayWelcomeMessage(pMachine->getLogoArt());
-    pMachine->toggle();
 }
 void MachineController::scanAction() {
-    while(pTransaction->isScanning()) {
-        while(!pMachine->setCurrentBarcode(pInterface->readBarcode())) {
-            pInterface->displayInputError();
-        }
-        if (pMachine->getCurrentBarcode() == "done") {
-            pTransaction->setScanning(false);
-            return;
-        }
-        pTransaction->addItem(pMachine->getItem(pMachine->getCurrentBarcode()));
-        pInterface->displayScannedItems(pTransaction->getScannedProducts(), pTransaction->getRunningBalance());
+    while(!pMachine->setCurrentBarcode(pInterface->readBarcode())) {
+        pInterface->displayInputError();
     }
-    pMachine->toggle();
+    if (pMachine->getCurrentBarcode() == "done") {
+        pTransaction->setScanning(false);
+        return;
+    }
+    pTransaction->addItem(pMachine->getItem(pMachine->getCurrentBarcode()));
+    pInterface->displayScannedItems(pTransaction->getScannedProducts(), pTransaction->getRunningBalance());
 }
 void MachineController::paymentAction() {
     pTransaction->setFinalTax(pMachine->calculateTax(pTransaction->getRunningBalance()));
@@ -47,14 +48,17 @@ void MachineController::paymentAction() {
         pInterface->displayReciept(*pTransaction);
     }
     pMachine->updateMachine(pTransaction->getCashPayed(), pTransaction->getChangeOwed(), pTransaction->getFinalBill());
-    pInterface->askIfMoreCustomers();
-    pMachine->toggle();
 }
 void MachineController::resultsAction() {
     pInterface->displayDayResults(pMachine->getChangeRepoBalance(), pMachine->getCashPurchaseRepoBalance(), pMachine->getDayIncome(), pMachine->getTotalIncome());
-    pInterface->askIfNewDay();
-    pMachine->toggle();
 }
 void MachineController::exitAction() {
     pInterface->displayGoodbye();
+}
+void MachineController::createTransaction() {
+    pTransaction = pMachine->createTransaction();
+}
+void MachineController::deleteTransaction() {
+    pMachine->deleteTransaction();
+    pTransaction = nullptr;
 }

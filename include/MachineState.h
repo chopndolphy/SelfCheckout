@@ -1,11 +1,11 @@
 #pragma once
-#include "ScoMachine.h"
+#include "MachineController.h"
 
-class ScoMachine;
+class MachineController;
 class MachineState {
     public:
-        virtual void enter(ScoMachine* machine) = 0;
-        virtual void toggle(ScoMachine* machine) = 0;
-        virtual void exit(ScoMachine* machine) = 0;
+        virtual void enter(MachineController* controller) = 0;
+        virtual void toggle(MachineController* controller) = 0;
+        virtual void exit(MachineController* controller) = 0;
         virtual ~MachineState() {}
 };

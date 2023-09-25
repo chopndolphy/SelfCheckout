@@ -5,7 +5,6 @@ const double ScoMachine::changeEmptiedAmount {50};
 const double ScoMachine::taxRate {.05};
 
 ScoMachine::ScoMachine() {
-    currentState = &Reset::getInstance();
     loadProductMap("CSV_Files/product_list.csv", machineProductMap);
     loadLogoArt("CSV_Files/logo_art.csv", logoArt);
 }
@@ -28,14 +27,7 @@ void ScoMachine::updateMachine(const double &cashInserted, const double &changeG
     //     machineRunning = 1;
     // }
 }
-void ScoMachine::setState(MachineState& newState) {
-    currentState->exit(this);
-    currentState = &newState;
-    currentState->enter(this);
-}
-void ScoMachine::toggle() {
-    currentState->toggle(this);
-}
+
 void ScoMachine::loadProductMap(const std::string &fileName, std::map<std::string, Product> &productMap) {
     std::vector<std::vector<std::string>> productMapFile;
     Reader::readCSV(fileName, productMapFile);
@@ -95,4 +87,11 @@ bool ScoMachine::setCurrentBarcode(const std::string &barcode) {
 }
 Product ScoMachine::getItem(const std::string &barcode) {
     return machineProductMap.at(barcode);
+}
+Transaction* ScoMachine::createTransaction() {
+    currentTransaction = new Transaction;
+    return currentTransaction;
+}
+void ScoMachine::deleteTransaction() {
+    delete currentTransaction;
 }

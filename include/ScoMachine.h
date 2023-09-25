@@ -3,16 +3,17 @@
 #include <map>
 #include <algorithm>
 #include <cmath>
-#include "MachineState.h"
 #include "Product.h"
 #include "Reader.h"
-#include "ConcreteMachineStates.h"
+#include "Transaction.h"
+
+
+
 class ScoMachine {
     public:
         ScoMachine ();
         void resetMachine();
         void updateMachine(const double &cashInserted, const double &changeGiven, const double &finalBill);
-        void setState(MachineState& newState);
         void loadProductMap(const std::string &fileName, std::map<std::string, Product> &productMap);
         void loadLogoArt(const std::string &fileName, std::string &logoString);
         double calculateChangeOwed(const double &cashPayed, const double &finalBill);
@@ -20,12 +21,11 @@ class ScoMachine {
         double calculateTax(const double &runningBalance);
         double calculateFinalBill(const double &runningBalance);
         int approveCredit();
-        void toggle();
+        Transaction* createTransaction();
+        void deleteTransaction();
         bool setCurrentBarcode(const std::string &barcode);
         Product getItem(const std::string &barcode);
-        MachineState* getCurrentState() const {
-            return currentState;
-        }
+        
         const double& getTotalIncome() const {
             return totalIncome;
         }
@@ -52,13 +52,13 @@ class ScoMachine {
         const static double changeEmptiedAmount;
         const static double taxRate;
     private:
+        Transaction* currentTransaction;
         double totalIncome {0};
         double changeRepoBalance {changeRefillAmount};
         double cashPurchaseRepoBalance {0};
         double dayIncome {0};
         std::string currentBarcode;
         std::string logoArt;
-        MachineState* currentState;
         std::map<std::string, Product> machineProductMap;
      
 };
