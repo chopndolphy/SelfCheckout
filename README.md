@@ -1,6 +1,8 @@
 # SelfCheckout
 Version 1.8.28
 ## Changelog
+### 2.9.29
+- SelfCheckout now supports multiple transactions per day and multiple days! Income and cash/change repositories will be tracked and updated.
 ### 1.9.17
 - Refactored to optimize for encapsulation.
 ### 1.8.28
@@ -15,9 +17,12 @@ Version 1.8.28
 - Makefile reworked for scalability, project restructure, and addition of new test files. 'make main' to create the self_checkout executable. 'make test "{test-file root}"' to create a test-file executable from any test-file.cpp.
 ## Bugs
 - Money not displaying two decimal places when hundredth's place ends in a 0
+- Can enter in a cash amount that would require to put the change repository into the negative
 ## To-Do
 - Fix bugs
 - Create tests as needed for class files and functions
+- 
+- GUI!!!
 # Getting Started
 SelfCheckout is a console application that emulates the functionality of a grocery store self-checkout machine. The project, as a whole, serves as a canvas for progressively and iteratively applying new software development concepts. Some examples of concepts applied to this project are:
 - Version control with git
@@ -44,7 +49,7 @@ You have the option to pay either with cash or card. If you pay with cash, you m
 
 You are then asked if you need a reciept. The reciept displays every product ID and product price, the calculate balance, tax, and final balance, and your inserted cash and recieved change (if cash is chosen) or your credit authorization code (if card is chosen). 
 
-Afterwards, you will be asked if there are more customers for the day (for a future feature). Lastly, the machine displays the cash deposited for the day, the change left for the day, the daily income, and the total income.
+Afterwards, you will be asked if there are more customers for the day. This will create a new transaction and go back to the beginning. If there are no more customers for the day or there is not enough cash to continue the day, the machine will ask if you want to start a new day. The machine displays the cash deposited for the day, the change left for the day, the daily income, and the total income. If there is a new day, the repos will be reset (the total income tracker will remain) and a new transaction will begin.
 ## Available Products
 
 | Product ID    | Product Name                        | Price  |
