@@ -18,7 +18,6 @@ void MachineController::toggle() {
 }
 void MachineController::resetAction() {
     pMachine->resetMachine();
-    pInterface->displayWelcomeMessage(pMachine->getLogoArt());
 }
 void MachineController::scanAction() {
     while(!pMachine->setCurrentBarcode(pInterface->readBarcode())) {
@@ -36,7 +35,9 @@ void MachineController::paymentAction() {
     pTransaction->setFinalBill(pMachine->calculateFinalBill(pTransaction->getRunningBalance()));
     pInterface->displayBalances(pTransaction->getFinalTax(), pTransaction->getFinalBill());
     if (pInterface->askIfPayingCash()) {
-        pTransaction->setCashPayed(pInterface->insertCash());
+        double cashInserted = pInterface->insertCash();
+        //check if enough cash.
+        pTransaction->setCashPayed(cashInserted);
         pTransaction->setChangeOwed(pTransaction->getCashPayed() - pTransaction->getFinalBill());
         pTransaction->setChangeQuantities(pMachine->calculateChange(pTransaction->getChangeOwed()));
         pInterface->displayChange(pTransaction->getCashPayed(), pTransaction->getChangeOwed(), pTransaction->getChangeQuantities());
@@ -57,6 +58,7 @@ void MachineController::exitAction() {
 }
 void MachineController::createTransaction() {
     pTransaction = pMachine->createTransaction();
+    pInterface->displayWelcomeMessage(pMachine->getLogoArt());
 }
 void MachineController::deleteTransaction() {
     pMachine->deleteTransaction();

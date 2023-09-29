@@ -1,5 +1,4 @@
 #pragma once
-#include "MachineController.h"
 
 class MachineController;
 class MachineState {
