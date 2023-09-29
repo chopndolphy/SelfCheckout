@@ -21,7 +21,7 @@ Version 1.8.28
 ## To-Do
 - Fix bugs
 - Create tests as needed for class files and functions
-- 
+- Comment code throroughly
 - GUI!!!
 # Getting Started
 SelfCheckout is a console application that emulates the functionality of a grocery store self-checkout machine. The project, as a whole, serves as a canvas for progressively and iteratively applying new software development concepts. Some examples of concepts applied to this project are:
