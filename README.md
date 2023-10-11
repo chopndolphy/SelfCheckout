@@ -19,6 +19,7 @@ Version 1.8.28
 - Money not displaying two decimal places when hundredth's place ends in a 0
 - Can enter in a cash amount that would require to put the change repository into the negative
 ## To-Do
+- config.ini and ini reader function
 - Fix bugs
 - Create tests as needed for class files and functions
 - Comment code throroughly
